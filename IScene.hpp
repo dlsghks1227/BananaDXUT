@@ -9,5 +9,8 @@ __interface IScene
 	void OnUpdate(float fElapsedTime);
 	void OnLateUpdate(float fElapsedTime);
 
-	void OnRender();
+	void OnRender(float fElapsedTime);
+
+	void OnResetDevice();
+	void OnLostDevice();
 };

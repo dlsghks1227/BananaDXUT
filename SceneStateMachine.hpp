@@ -19,7 +19,11 @@ public:
 
 	void OnUpdate(float fElapsedTime);
 	void OnLateUpdate(float fElapsedTime);
-	void OnRender();
+
+	void OnRender(float fElapsedTime);
+
+	void OnResetDevice();
+	void OnLostDevice();
 
 	void Add(std::wstring const& name, std::shared_ptr<IScene> scene);
 	void SwitchTo(std::wstring name);

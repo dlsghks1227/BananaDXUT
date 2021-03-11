@@ -63,7 +63,8 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
     return true;
 }
 
-
+D3DXVECTOR3 vEye(0.0f, 0.0f, 20.0f);
+D3DXVECTOR3 vLookat(0.0f, 0.0f, 0.0f);
 //--------------------------------------------------------------------------------------
 // Create any D3D9 resources that will live through a device reset (D3DPOOL_MANAGED)
 // and aren't tied to the back buffer size
@@ -74,13 +75,10 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
     HRESULT hr = S_OK;
     V_RETURN(g_dialogResourceManager.OnD3D9CreateDevice(pd3dDevice));
 
-    // ------- Camera -------
-    auto viewMatrix = g_camera.GetViewMatrix();
-    auto projMatrix = g_camera.GetProjMatrix();
+    //D3DXVECTOR3 vEye(0.0f, 0.0f, 20.0f);
+    //D3DXVECTOR3 vLookat(0.0f, 0.0f, 0.0f);
+    //g_camera.SetViewParams(&vEye, &vLookat);
 
-    pd3dDevice->SetTransform(D3DTS_VIEW, viewMatrix);
-    pd3dDevice->SetTransform(D3DTS_PROJECTION, projMatrix);
-    // ----------------------
 
     D3DXCreateLine(pd3dDevice, &g_pLine);
 
@@ -133,7 +131,25 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
 
     g_inputManager->KeyBoardUpdate();
 
-    if (g_inputManager->GetKeyPush(DIK_LEFT)) std::wcout << L"Test\n";
+
+    if (g_inputManager->GetKeyPush(DIK_UP)) {
+        vLookat += D3DXVECTOR3(0.0f, 10.0f, 0.0f) * fElapsedTime;
+    }
+
+    if (g_inputManager->GetKeyPush(DIK_DOWN)) {
+        vLookat -= D3DXVECTOR3(0.0f, 10.0f, 0.0f) * fElapsedTime;
+    }
+
+    if (g_inputManager->GetKeyPush(DIK_LEFT)) {
+        vLookat += D3DXVECTOR3(10.0f, 0.0f, 0.0f) * fElapsedTime;
+    }
+
+    if (g_inputManager->GetKeyPush(DIK_RIGHT)) {
+        vLookat -= D3DXVECTOR3(10.0f, 0.0f, 0.0f) * fElapsedTime;
+    }
+
+    g_camera.SetViewParams(&vEye, &vLookat);
+
 }
 
 
@@ -147,6 +163,14 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
     // Clear the render target and the zbuffer 
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 45, 50, 170 ), 1.0f, 0 ) );
 
+    // ------- Camera -------
+    auto viewMatrix = g_camera.GetViewMatrix();
+    auto projMatrix = g_camera.GetProjMatrix();
+
+    pd3dDevice->SetTransform(D3DTS_VIEW, viewMatrix);
+    pd3dDevice->SetTransform(D3DTS_PROJECTION, projMatrix);
+    // ----------------------
+
     // Render the scene
     if( SUCCEEDED( pd3dDevice->BeginScene() ) )
     {
@@ -154,28 +178,30 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
         g_game->OnRender(fElapsedTime);
         // --------------------
 
-        //// Line
-        //g_hLine[0] = D3DXVECTOR3(-5.0f, -5.0f, 0.0f);
-        //g_hLine[1] = D3DXVECTOR3( 5.0f, -5.0f, 0.0f);
+        // Line
+        g_hLine[0] = D3DXVECTOR3(-5.0f, -5.0f, 0.0f);
+        g_hLine[1] = D3DXVECTOR3( 5.0f, -5.0f, 0.0f);
 
-        //g_vLine[0] = D3DXVECTOR3(-5.0f, -5.0f, 0.0f);
-        //g_vLine[1] = D3DXVECTOR3(-5.0f,  5.0f, 0.0f);
+        g_vLine[0] = D3DXVECTOR3(-5.0f, -5.0f, 0.0f);
+        g_vLine[1] = D3DXVECTOR3(-5.0f,  5.0f, 0.0f);
 
-        //g_pLine->SetWidth(1.0f);
-        //g_pLine->Begin();
+        g_mat = (*g_camera.GetViewMatrix()) * (*g_camera.GetProjMatrix());
 
-        //for (int i = 0; i < 11; i++) {
-        //    g_pLine->DrawTransform(g_hLine, std::size(g_hLine), &g_mat, D3DCOLOR_XRGB(128, 128, 128));
-        //    g_pLine->DrawTransform(g_vLine, std::size(g_vLine), &g_mat, D3DCOLOR_XRGB(128, 128, 128));
+        g_pLine->SetWidth(2.0f);
+        g_pLine->Begin();
 
-        //    g_hLine[0] += D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-        //    g_hLine[1] += D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-        //                                          
-        //    g_vLine[0] += D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-        //    g_vLine[1] += D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-        //}
+        for (int i = 0; i < 11; i++) {
+            g_pLine->DrawTransform(g_hLine, std::size(g_hLine), &g_mat, D3DCOLOR_XRGB(128, 128, 128));
+            g_pLine->DrawTransform(g_vLine, std::size(g_vLine), &g_mat, D3DCOLOR_XRGB(128, 128, 128));
 
-        //g_pLine->End();
+            g_hLine[0] += D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+            g_hLine[1] += D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+                                                  
+            g_vLine[0] += D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+            g_vLine[1] += D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+        }
+
+        g_pLine->End();
         V( pd3dDevice->EndScene() );
     }
 }
@@ -237,8 +263,8 @@ void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 
 void CALLBACK OnGUIEvent(UINT nEvent, int nControlID, CDXUTControl* pControl, void* pUserContexts)
 {
-    switch (static_cast<GUI_EVENT>(nControlID)) {
-    case GUI_EVENT::IDC_TOGGLEFULLSCREEN:
+    switch (static_cast<UI_CONTROL_ID>(nControlID)) {
+    case UI_CONTROL_ID::IDC_TOGGLEFULLSCREEN:
         DXUTToggleFullScreen();
         break;
     }

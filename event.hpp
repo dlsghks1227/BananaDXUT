@@ -1,5 +1,7 @@
 #pragma once
 
-enum class GUI_EVENT : int {
+enum class UI_CONTROL_ID : int {
     IDC_TOGGLEFULLSCREEN = 0,
+
+    IDC_STATIC,
 };

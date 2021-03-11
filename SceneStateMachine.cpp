@@ -24,11 +24,27 @@ void SceneStateMachine::OnLateUpdate(float fElapsedTime)
 	}
 }
 
-void SceneStateMachine::OnRender()
+void SceneStateMachine::OnRender(float fElapsedTime)
 {
 	if (m_currentScene)
 	{
-		m_currentScene->OnRender();
+		m_currentScene->OnRender(fElapsedTime);
+	}
+}
+
+void SceneStateMachine::OnResetDevice()
+{
+	if (m_currentScene)
+	{
+		m_currentScene->OnResetDevice();
+	}
+}
+
+void SceneStateMachine::OnLostDevice()
+{
+	if (m_currentScene)
+	{
+		m_currentScene->OnLostDevice();
 	}
 }
 

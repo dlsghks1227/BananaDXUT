@@ -21,20 +21,30 @@ void Game::Initialize()
 	m_HUD.Init(&g_dialogResourceManager);
 
 	m_HUD.SetCallback(OnGUIEvent);
-	m_HUD.AddButton(static_cast<int>(GUI_EVENT::IDC_TOGGLEFULLSCREEN), L"Toggle full screen", 35, 10, 125, 22);	
+	m_HUD.AddButton(static_cast<int>(UI_CONTROL_ID::IDC_TOGGLEFULLSCREEN), L"Toggle full screen", 35, 10, 125, 22);	
+
+	m_MenuScene = std::make_shared<MenuScene>();
+
+	m_sceneStateMachine.Add(L"MenuScene", m_MenuScene);
+
+	m_sceneStateMachine.SwitchTo(L"MenuScene");
 }
 
 void Game::OnUpdate(float fElapsedTime)
 {
+	m_sceneStateMachine.OnUpdate(fElapsedTime);
 }
 
 void Game::OnLateUpdate(float fElapsedTime)
 {
+	m_sceneStateMachine.OnLateUpdate(fElapsedTime);
 }
 
 void Game::OnRender(float fElapsedTime)
 {
 	m_HUD.OnRender(fElapsedTime);
+
+	m_sceneStateMachine.OnRender(fElapsedTime);
 }
 
 LRESULT Game::MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext)

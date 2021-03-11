@@ -5,6 +5,9 @@
 #include "DXUTsettingsdlg.h"
 #include "header.hpp"
 
+#include "SceneStateMachine.hpp"
+#include "MenuScene.h"
+
 class Game final
 {
 public:
@@ -24,13 +27,16 @@ public:
 
 	void OnRender(float fElapsedTime);
 
-	LRESULT MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext);
-
 	void OnResetDevice();
 	void OnLostDevice();
 
 	void OnDestoryDevice();
 
-public:
+	LRESULT MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext);
+
+private:
 	CDXUTDialog					m_HUD;
+
+	SceneStateMachine			m_sceneStateMachine;
+	std::shared_ptr<MenuScene>	m_MenuScene;
 };
