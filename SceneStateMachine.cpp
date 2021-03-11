@@ -48,6 +48,31 @@ void SceneStateMachine::OnLostDevice()
 	}
 }
 
+void SceneStateMachine::OnKeyboard(UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext)
+{
+	if (m_currentScene)
+	{
+		m_currentScene->OnKeyboard(nChar, bKeyDown, bAltDown, pUserContext);
+	}
+}
+
+void SceneStateMachine::OnMouse(bool bLeftButtonDown, bool bRightButtonDown, bool bMiddleButtonDown, bool bSideButton1Down, bool bSideButton2Down, int nMouseWheelDelta, int xPos, int yPos, void* pUserContext)
+{
+	if (m_currentScene)
+	{
+		m_currentScene->OnMouse(bLeftButtonDown, bRightButtonDown, bMiddleButtonDown, bSideButton1Down, bSideButton2Down, nMouseWheelDelta, xPos, yPos, pUserContext);
+	}
+}
+
+LRESULT SceneStateMachine::MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext)
+{
+	if (m_currentScene)
+	{
+		return m_currentScene->MsgProc(hWnd, uMsg, wParam, lParam, pbNoFurtherProcessing, pUserContext);
+	}
+	return 0;
+}
+
 void SceneStateMachine::Add(std::wstring const& name, std::shared_ptr<IScene> scene)
 {
 	// map insert 정확하게 사용하기

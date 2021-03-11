@@ -92,6 +92,9 @@
     <ClCompile Include="MenuScene.cpp">
       <Filter>Game\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="MainScene.cpp">
+      <Filter>Game\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header.hpp" />
@@ -107,8 +110,11 @@
     <ClInclude Include="Game.hpp">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="event.hpp" />
+    <ClInclude Include="Event.hpp" />
     <ClInclude Include="MenuScene.h">
+      <Filter>Game\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="MainScene.h">
       <Filter>Game\Scene</Filter>
     </ClInclude>
   </ItemGroup>

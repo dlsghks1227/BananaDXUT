@@ -17,13 +17,18 @@ public:
 	SceneStateMachine(SceneStateMachine const&) = delete;
 	SceneStateMachine& operator = (SceneStateMachine const&) = delete;
 
-	void OnUpdate(float fElapsedTime);
-	void OnLateUpdate(float fElapsedTime);
+	void		OnUpdate(float fElapsedTime);
+	void		OnLateUpdate(float fElapsedTime);
 
-	void OnRender(float fElapsedTime);
+	void		OnRender(float fElapsedTime);
 
-	void OnResetDevice();
-	void OnLostDevice();
+	void		OnResetDevice();
+	void		OnLostDevice();
+
+	void		OnKeyboard(UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext);
+	void		OnMouse(bool bLeftButtonDown, bool bRightButtonDown, bool bMiddleButtonDown, bool bSideButton1Down, bool bSideButton2Down, int nMouseWheelDelta, int xPos, int yPos, void* pUserContext);
+
+	LRESULT		MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext);
 
 	void Add(std::wstring const& name, std::shared_ptr<IScene> scene);
 	void SwitchTo(std::wstring name);

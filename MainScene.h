@@ -2,18 +2,17 @@
 #include "DXUT.h"
 #include "IScene.hpp"
 
-class MenuScene final : public IScene
+class MainScene final : public IScene
 {
 public:
-	MenuScene()		noexcept;
-	~MenuScene() = default;
+	MainScene() noexcept;
+	~MainScene() = default;
 
-	MenuScene(MenuScene&&) = default;
-	MenuScene& operator = (MenuScene&&) = default;
+	MainScene(MainScene&&) = default;
+	MainScene& operator = (MainScene&&) = default;
 
-	MenuScene(MenuScene const&) = delete;
-	MenuScene& operator = (MenuScene const&) = delete;
-	
+	MainScene(MainScene const&) = delete;
+	MainScene& operator = (MainScene const&) = delete;
 
 	void	OnEnterScene()						override;
 	void	OnExitScene()						override;
@@ -32,5 +31,5 @@ public:
 	LRESULT MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext) override;
 
 private:
-	CDXUTDialog		m_UI;
+
 };

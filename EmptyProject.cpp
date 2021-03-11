@@ -186,8 +186,10 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
         g_vLine[1] = D3DXVECTOR3(-5.0f,  5.0f, 0.0f);
 
         g_mat = (*g_camera.GetViewMatrix()) * (*g_camera.GetProjMatrix());
+        
+        g_pLine->SetAntialias(true);
+        g_pLine->SetWidth(1.0f);
 
-        g_pLine->SetWidth(2.0f);
         g_pLine->Begin();
 
         for (int i = 0; i < 11; i++) {
@@ -218,12 +220,20 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
         return 0;
 
     // ------- Game -------
-    // g_game->m_HUD->MsgProc(hWnd, uMsg, wParam, lParam);
     g_game->MsgProc(hWnd, uMsg, wParam, lParam, pbNoFurtherProcessing, pUserContext);
-    
     // --------------------
 
     return 0;
+}
+
+
+void CALLBACK OnKeyboard(UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext)
+{
+}
+
+
+void CALLBACK OnMouse(bool bLeftButtonDown, bool bRightButtonDown, bool bMiddleButtonDown, bool bSideButton1Down, bool bSideButton2Down, int nMouseWheelDelta, int xPos, int yPos, void* pUserContext)
+{
 }
 
 
@@ -290,6 +300,9 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     DXUTSetCallbackDeviceChanging( ModifyDeviceSettings );
     DXUTSetCallbackMsgProc( MsgProc );
     DXUTSetCallbackFrameMove( OnFrameMove );
+
+    DXUTSetCallbackKeyboard( OnKeyboard );
+    DXUTSetCallbackMouse( OnMouse );
 
     // TODO: Perform any application-level initialization here
     g_game = std::make_unique<Game>();
