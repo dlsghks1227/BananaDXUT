@@ -1,12 +1,15 @@
 #pragma once
 #include "DXUT.h"
 #include "IScene.hpp"
+#include "header.hpp"
+
+#include "Player.hpp"
 
 class MainScene final : public IScene
 {
 public:
 	MainScene() noexcept;
-	~MainScene() = default;
+	~MainScene();
 
 	MainScene(MainScene&&) = default;
 	MainScene& operator = (MainScene&&) = default;
@@ -25,11 +28,10 @@ public:
 	void	OnResetDevice()						override;
 	void	OnLostDevice()						override;
 
-	void	OnKeyboard(UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext) override;
-	void	OnMouse(bool bLeftButtonDown, bool bRightButtonDown, bool bMiddleButtonDown, bool bSideButton1Down, bool bSideButton2Down, int nMouseWheelDelta, int xPos, int yPos, void* pUserContext) override;
+	void	OnDestroyDevice()					override;
 
 	LRESULT MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext) override;
 
 private:
-
+	std::unique_ptr<Player>		m_player;
 };

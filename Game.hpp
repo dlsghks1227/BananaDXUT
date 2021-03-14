@@ -7,6 +7,7 @@
 
 #include "SceneStateMachine.hpp"
 #include "MenuScene.h"
+#include "MainScene.h"
 
 class Game final
 {
@@ -20,23 +21,24 @@ public:
 	Game(Game const&) = delete;
 	Game& operator = (Game const&) = delete;
 
-	void Initialize();
+	void		OnCreateDevice();
 
-	void OnUpdate(float fElapsedTime);
-	void OnLateUpdate(float fElapsedTime);
+	void		OnUpdate(float fElapsedTime);
+	void		OnLateUpdate(float fElapsedTime);
 
-	void OnRender(float fElapsedTime);
+	void		OnRender(float fElapsedTime);
 
-	void OnResetDevice();
-	void OnLostDevice();
+	void		OnResetDevice();
+	void		OnLostDevice();
 
-	void OnDestoryDevice();
+	void		OnDestoryDevice();
 
-	LRESULT MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext);
+	LRESULT		MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext);
 
 private:
 	CDXUTDialog					m_HUD;
 
 	SceneStateMachine			m_sceneStateMachine;
-	std::shared_ptr<MenuScene>	m_MenuScene;
+	std::shared_ptr<MenuScene>	m_menuScene;
+	std::shared_ptr<MainScene>	m_mainScene;
 };

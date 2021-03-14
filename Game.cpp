@@ -9,25 +9,23 @@
 extern CModelViewerCamera			g_camera;
 extern CDXUTDialogResourceManager	g_dialogResourceManager;
 
-extern void CALLBACK OnGUIEvent(UINT nEvent, int nControlID, CDXUTControl* pControl, void* pUserContexts);
-
 Game::Game() noexcept
-{
-
-}
-
-void Game::Initialize()
 {
 	m_HUD.Init(&g_dialogResourceManager);
 
 	m_HUD.SetCallback(OnGUIEvent);
-	m_HUD.AddButton(static_cast<int>(UI_CONTROL_ID::IDC_TOGGLEFULLSCREEN), L"Toggle full screen", 35, 10, 125, 22);	
+	m_HUD.AddButton(static_cast<int>(UI_CONTROL_ID::IDC_TOGGLEFULLSCREEN), L"Toggle full screen", 35, 10, 125, 22);
 
-	m_MenuScene = std::make_shared<MenuScene>();
+	m_menuScene = std::make_shared<MenuScene>();
+	m_mainScene = std::make_shared<MainScene>();
 
-	m_sceneStateMachine.Add(L"MenuScene", m_MenuScene);
+	m_sceneStateMachine.Add(L"MenuScene", m_menuScene);
+	m_sceneStateMachine.Add(L"MainScene", m_mainScene);
+}
 
-	m_sceneStateMachine.SwitchTo(L"MenuScene");
+void Game::OnCreateDevice()
+{
+	m_sceneStateMachine.SwitchTo(L"MainScene");
 }
 
 void Game::OnUpdate(float fElapsedTime)
@@ -47,15 +45,6 @@ void Game::OnRender(float fElapsedTime)
 	m_sceneStateMachine.OnRender(fElapsedTime);
 }
 
-LRESULT Game::MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext)
-{
-	*pbNoFurtherProcessing = m_HUD.MsgProc(hWnd, uMsg, wParam, lParam);
-	if (*pbNoFurtherProcessing)
-		return 0;
-
-	return 0;
-}
-
 void Game::OnResetDevice()
 {
 	auto backBufferSurfaceDesc = DXUTGetD3D9BackBufferSurfaceDesc();
@@ -66,8 +55,20 @@ void Game::OnResetDevice()
 
 void Game::OnLostDevice()
 {
+	m_sceneStateMachine.OnLostDevice();
 }
 
 void Game::OnDestoryDevice()
 {
+	m_sceneStateMachine.OnDestoryDevice();
+}
+
+
+LRESULT Game::MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext)
+{
+	*pbNoFurtherProcessing = m_HUD.MsgProc(hWnd, uMsg, wParam, lParam);
+	if (*pbNoFurtherProcessing)
+		return 0;
+
+	return 0;
 }

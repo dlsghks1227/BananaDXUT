@@ -44,15 +44,11 @@ void MenuScene::OnLostDevice()
 {
 }
 
-void MenuScene::OnKeyboard(UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext)
-{
-}
-
-void MenuScene::OnMouse(bool bLeftButtonDown, bool bRightButtonDown, bool bMiddleButtonDown, bool bSideButton1Down, bool bSideButton2Down, int nMouseWheelDelta, int xPos, int yPos, void* pUserContext)
+void MenuScene::OnDestroyDevice()
 {
 }
 
 LRESULT MenuScene::MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext)
 {
-	return LRESULT();
+	return 0;
 }

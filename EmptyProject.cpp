@@ -21,16 +21,17 @@
 //--------------------------------------------------------------------------------------
 // Global variables
 //--------------------------------------------------------------------------------------
-CModelViewerCamera		    g_camera;
 CDXUTDialogResourceManager	g_dialogResourceManager;
+D3DXMATRIXA16               g_matrix;
+
+LPD3DXSPRITE                g_sprite;
+LPDIRECT3DTEXTURE9          g_texture;
 
 
 LPD3DXLINE          g_pLine;
 
 D3DXVECTOR3         g_hLine[2];
 D3DXVECTOR3         g_vLine[2];
-
-D3DXMATRIX          g_mat;
 
 
 namespace
@@ -63,8 +64,6 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
     return true;
 }
 
-D3DXVECTOR3 vEye(0.0f, 0.0f, 20.0f);
-D3DXVECTOR3 vLookat(0.0f, 0.0f, 0.0f);
 //--------------------------------------------------------------------------------------
 // Create any D3D9 resources that will live through a device reset (D3DPOOL_MANAGED)
 // and aren't tied to the back buffer size
@@ -75,10 +74,28 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
     HRESULT hr = S_OK;
     V_RETURN(g_dialogResourceManager.OnD3D9CreateDevice(pd3dDevice));
 
-    //D3DXVECTOR3 vEye(0.0f, 0.0f, 20.0f);
-    //D3DXVECTOR3 vLookat(0.0f, 0.0f, 0.0f);
-    //g_camera.SetViewParams(&vEye, &vLookat);
+    D3DXIMAGE_INFO info;
+    V(D3DXCreateSprite(pd3dDevice, &g_sprite));
+    if (g_texture == nullptr) {
+        V(D3DXCreateTextureFromFileEx(
+            pd3dDevice,
+            L"Res/background.jpg",
+            D3DX_DEFAULT,
+            D3DX_DEFAULT,
+            1,
+            0,
+            D3DFMT_A8R8G8B8,
+            D3DPOOL_MANAGED,
+            D3DX_DEFAULT,
+            D3DX_DEFAULT,
+            D3DCOLOR_XRGB(0, 0, 0),
+            &info,
+            nullptr,
+            &g_texture
+        ));
+    }
 
+    g_game->OnCreateDevice();
 
     D3DXCreateLine(pd3dDevice, &g_pLine);
 
@@ -99,14 +116,16 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFA
 
     V_RETURN(g_dialogResourceManager.OnD3D9ResetDevice());
 
+    g_sprite->OnResetDevice();
+
     // ------- Game -------
     g_game->OnResetDevice();
     // --------------------
 
     // ------- Camera -------
-    float fAspectRatio = static_cast<FLOAT>(pBackBufferSurfaceDesc->Width) / static_cast<FLOAT>(pBackBufferSurfaceDesc->Height);
-    g_camera.SetProjParams(D3DX_PI / 4.0f, fAspectRatio, 0.1f, 10000.0f);
-    g_camera.SetWindow(pBackBufferSurfaceDesc->Width, pBackBufferSurfaceDesc->Height);
+    // float fAspectRatio = static_cast<FLOAT>(pBackBufferSurfaceDesc->Width) / static_cast<FLOAT>(pBackBufferSurfaceDesc->Height);
+    // g_camera.SetProjParams(D3DX_PI / 2.0f, fAspectRatio, 0.1f, 10000.0f);
+    // g_camera.SetWindow(pBackBufferSurfaceDesc->Width, pBackBufferSurfaceDesc->Height);
     // ----------------------
 
     g_pLine->OnResetDevice();
@@ -125,31 +144,7 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
     g_game->OnLateUpdate(fElapsedTime);
     // --------------------
 
-    // ------- Camera -------
-    g_camera.FrameMove(fElapsedTime);
-    // ----------------------
-
     g_inputManager->KeyBoardUpdate();
-
-
-    if (g_inputManager->GetKeyPush(DIK_UP)) {
-        vLookat += D3DXVECTOR3(0.0f, 10.0f, 0.0f) * fElapsedTime;
-    }
-
-    if (g_inputManager->GetKeyPush(DIK_DOWN)) {
-        vLookat -= D3DXVECTOR3(0.0f, 10.0f, 0.0f) * fElapsedTime;
-    }
-
-    if (g_inputManager->GetKeyPush(DIK_LEFT)) {
-        vLookat += D3DXVECTOR3(10.0f, 0.0f, 0.0f) * fElapsedTime;
-    }
-
-    if (g_inputManager->GetKeyPush(DIK_RIGHT)) {
-        vLookat -= D3DXVECTOR3(10.0f, 0.0f, 0.0f) * fElapsedTime;
-    }
-
-    g_camera.SetViewParams(&vEye, &vLookat);
-
 }
 
 
@@ -162,45 +157,65 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
 
     // Clear the render target and the zbuffer 
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 45, 50, 170 ), 1.0f, 0 ) );
+    float windowWidth = static_cast<float>(DXUTGetWindowWidth());
+    float windowHeight = static_cast<float>(DXUTGetWindowHeight());
 
-    // ------- Camera -------
-    auto viewMatrix = g_camera.GetViewMatrix();
-    auto projMatrix = g_camera.GetProjMatrix();
+    D3DXVECTOR2 transfrom(0.0f, 0.0f);
+    D3DXVECTOR2 scale(1.0f, 1.0f);
+    D3DXMatrixIdentity(&g_matrix);
+    D3DXMatrixTransformation2D(&g_matrix, nullptr, 0.0f, &scale, nullptr, 0.0f, &transfrom);
 
-    pd3dDevice->SetTransform(D3DTS_VIEW, viewMatrix);
-    pd3dDevice->SetTransform(D3DTS_PROJECTION, projMatrix);
-    // ----------------------
+    D3DXMATRIX m;
+    D3DXMatrixIdentity(&m);
+    D3DXMatrixOrthoLH(&m, windowWidth, -windowHeight, 0.0f, 1.0f);
+    m = g_matrix * m;
 
     // Render the scene
     if( SUCCEEDED( pd3dDevice->BeginScene() ) )
     {
+        g_sprite->SetTransform(&m);
+        g_sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
+
+        RECT rc1 = { 240, 0, 480, 987 };
+        D3DXVECTOR3 center1(120.0f, 493.5f, 0.0f);
+        D3DXVECTOR3 pos1(120.0f, 0.0f, 0.0f);
+        g_sprite->Draw(g_texture, &rc1, &center1, &pos1, D3DCOLOR_XRGB(255, 255, 255));
+
+        RECT rc2 = { 0, 0, 240, 987 };
+        D3DXVECTOR3 center2(120.0f, 493.5f, 0.0f);
+        D3DXVECTOR3 pos2(-220.0f, 0.0f, 0.0f);
+        g_sprite->Draw(g_texture, &rc2, &center2, &pos2, D3DCOLOR_XRGB(255, 255, 255));
         // ------- Game -------
         g_game->OnRender(fElapsedTime);
         // --------------------
 
+        g_sprite->End();
+
         // Line
-        g_hLine[0] = D3DXVECTOR3(-5.0f, -5.0f, 0.0f);
-        g_hLine[1] = D3DXVECTOR3( 5.0f, -5.0f, 0.0f);
+        g_hLine[0] = D3DXVECTOR3(-1000.0f, -1000.0f, 0.3f);
+        g_hLine[1] = D3DXVECTOR3( 1000.0f, -1000.0f, 0.3f);
+                                                       
+        g_vLine[0] = D3DXVECTOR3(-1000.0f, -1000.0f, 0.3f);
+        g_vLine[1] = D3DXVECTOR3(-1000.0f,  1000.0f, 0.3f);
 
-        g_vLine[0] = D3DXVECTOR3(-5.0f, -5.0f, 0.0f);
-        g_vLine[1] = D3DXVECTOR3(-5.0f,  5.0f, 0.0f);
-
-        g_mat = (*g_camera.GetViewMatrix()) * (*g_camera.GetProjMatrix());
         
-        g_pLine->SetAntialias(true);
+        g_pLine->SetAntialias(false);
         g_pLine->SetWidth(1.0f);
 
         g_pLine->Begin();
 
-        for (int i = 0; i < 11; i++) {
-            g_pLine->DrawTransform(g_hLine, std::size(g_hLine), &g_mat, D3DCOLOR_XRGB(128, 128, 128));
-            g_pLine->DrawTransform(g_vLine, std::size(g_vLine), &g_mat, D3DCOLOR_XRGB(128, 128, 128));
+        //D3DXMatrixIdentity(&g_matrix);
+        //D3DXMatrixPerspectiveFovLH(&g_matrix, D3DX_PI / 4.0f, 1.0f, 0.3f, 224.5f);
+        for (int i = 0; i <= 200; i++) {
+            // g_pLine->Draw(g_hLine, std::size(g_hLine), D3DCOLOR_XRGB(128, 128, 128)
+            g_pLine->DrawTransform(g_hLine, std::size(g_hLine), &m, D3DCOLOR_XRGB(128, 128, 128));
+            g_pLine->DrawTransform(g_vLine, std::size(g_vLine), &m, D3DCOLOR_XRGB(128, 128, 128));
 
-            g_hLine[0] += D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-            g_hLine[1] += D3DXVECTOR3(0.0f, 1.0f, 0.0f);
-                                                  
-            g_vLine[0] += D3DXVECTOR3(1.0f, 0.0f, 0.0f);
-            g_vLine[1] += D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+            g_hLine[0] += D3DXVECTOR3(0.0f, 10.0f, 0.0f);
+            g_hLine[1] += D3DXVECTOR3(0.0f, 10.0f, 0.0f);
+
+            g_vLine[0] += D3DXVECTOR3(10.0f, 0.0f, 0.0f);
+            g_vLine[1] += D3DXVECTOR3(10.0f, 0.0f, 0.0f);
         }
 
         g_pLine->End();
@@ -223,17 +238,9 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
     g_game->MsgProc(hWnd, uMsg, wParam, lParam, pbNoFurtherProcessing, pUserContext);
     // --------------------
 
+    // g_camera.HandleMessages(hWnd, uMsg, wParam, lParam);
+
     return 0;
-}
-
-
-void CALLBACK OnKeyboard(UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext)
-{
-}
-
-
-void CALLBACK OnMouse(bool bLeftButtonDown, bool bRightButtonDown, bool bMiddleButtonDown, bool bSideButton1Down, bool bSideButton2Down, int nMouseWheelDelta, int xPos, int yPos, void* pUserContext)
-{
 }
 
 
@@ -243,6 +250,8 @@ void CALLBACK OnMouse(bool bLeftButtonDown, bool bRightButtonDown, bool bMiddleB
 void CALLBACK OnD3D9LostDevice( void* pUserContext )
 {
     g_dialogResourceManager.OnD3D9LostDevice();
+
+    g_sprite->OnLostDevice();
 
     // ------- Game -------
     g_game->OnLostDevice();
@@ -261,15 +270,12 @@ void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 
     // ------- Game -------
     g_game->OnDestoryDevice();
-    g_game.reset();
     // --------------------
 
-    // ------- Camera -------
-    // ----------------------
-
+    SAFE_RELEASE(g_sprite);
+    SAFE_RELEASE(g_texture);
     SAFE_RELEASE(g_pLine);
 }
-
 
 void CALLBACK OnGUIEvent(UINT nEvent, int nControlID, CDXUTControl* pControl, void* pUserContexts)
 {
@@ -279,7 +285,6 @@ void CALLBACK OnGUIEvent(UINT nEvent, int nControlID, CDXUTControl* pControl, vo
         break;
     }
 }
-
 
 //--------------------------------------------------------------------------------------
 // Initialize everything and go into a render loop
@@ -301,12 +306,8 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     DXUTSetCallbackMsgProc( MsgProc );
     DXUTSetCallbackFrameMove( OnFrameMove );
 
-    DXUTSetCallbackKeyboard( OnKeyboard );
-    DXUTSetCallbackMouse( OnMouse );
-
     // TODO: Perform any application-level initialization here
     g_game = std::make_unique<Game>();
-    g_game->Initialize();
 
     // Initialize DXUT and create the desired Win32 window and Direct3D device for the application
     DXUTInit( true, true ); // Parse the command line and show msgboxes
@@ -322,5 +323,3 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
     return DXUTGetExitCode();
 }
-
-
