@@ -13,7 +13,7 @@ class Game final
 {
 public:
 	Game() noexcept;
-	~Game() = default;
+	~Game();
 
 	Game(Game&&) = default;
 	Game& operator = (Game&&) = default;

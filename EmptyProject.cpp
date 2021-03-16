@@ -18,6 +18,8 @@
 #include "InputManager.hpp"
 #include "SceneStateMachine.hpp"
 
+#include "Texture.h"
+
 //--------------------------------------------------------------------------------------
 // Global variables
 //--------------------------------------------------------------------------------------
@@ -25,13 +27,11 @@ CDXUTDialogResourceManager	g_dialogResourceManager;
 D3DXMATRIXA16               g_matrix;
 
 LPD3DXSPRITE                g_sprite;
-LPDIRECT3DTEXTURE9          g_texture;
+LPD3DXLINE                  g_pLine;
 
 
-LPD3DXLINE          g_pLine;
-
-D3DXVECTOR3         g_hLine[2];
-D3DXVECTOR3         g_vLine[2];
+D3DXVECTOR3                 g_hLine[2];
+D3DXVECTOR3                 g_vLine[2];
 
 
 namespace
@@ -74,26 +74,7 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
     HRESULT hr = S_OK;
     V_RETURN(g_dialogResourceManager.OnD3D9CreateDevice(pd3dDevice));
 
-    D3DXIMAGE_INFO info;
     V(D3DXCreateSprite(pd3dDevice, &g_sprite));
-    if (g_texture == nullptr) {
-        V(D3DXCreateTextureFromFileEx(
-            pd3dDevice,
-            L"Res/background.jpg",
-            D3DX_DEFAULT,
-            D3DX_DEFAULT,
-            1,
-            0,
-            D3DFMT_A8R8G8B8,
-            D3DPOOL_MANAGED,
-            D3DX_DEFAULT,
-            D3DX_DEFAULT,
-            D3DCOLOR_XRGB(0, 0, 0),
-            &info,
-            nullptr,
-            &g_texture
-        ));
-    }
 
     g_game->OnCreateDevice();
 
@@ -160,45 +141,29 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
     float windowWidth = static_cast<float>(DXUTGetWindowWidth());
     float windowHeight = static_cast<float>(DXUTGetWindowHeight());
 
+    D3DXMATRIX worldMatrix;
     D3DXVECTOR2 transfrom(0.0f, 0.0f);
     D3DXVECTOR2 scale(1.0f, 1.0f);
-    D3DXMatrixIdentity(&g_matrix);
-    D3DXMatrixTransformation2D(&g_matrix, nullptr, 0.0f, &scale, nullptr, 0.0f, &transfrom);
+    D3DXMatrixIdentity(&worldMatrix);
+    D3DXMatrixTransformation2D(&worldMatrix, nullptr, 0.0f, &scale, nullptr, 0.0f, &transfrom);
 
-    D3DXMATRIX m;
-    D3DXMatrixIdentity(&m);
-    D3DXMatrixOrthoLH(&m, windowWidth, -windowHeight, 0.0f, 1.0f);
-    m = g_matrix * m;
+    D3DXMatrixIdentity(&g_matrix);
+    D3DXMatrixOrthoLH(&g_matrix, windowWidth, windowHeight * -1.0f, -1.0f, 1.0f);
+    g_matrix = worldMatrix * g_matrix;
 
     // Render the scene
     if( SUCCEEDED( pd3dDevice->BeginScene() ) )
     {
-        g_sprite->SetTransform(&m);
+        // Line
+        g_hLine[0] = D3DXVECTOR3(-1000.0f, -1000.0f, 1.0f);
+        g_hLine[1] = D3DXVECTOR3( 1000.0f, -1000.0f, 1.0f);
+                                                     
+        g_vLine[0] = D3DXVECTOR3(-1000.0f, -1000.0f, 1.0f);
+        g_vLine[1] = D3DXVECTOR3(-1000.0f,  1000.0f, 1.0f);
+
+        g_sprite->SetTransform(&worldMatrix);
         g_sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
 
-        RECT rc1 = { 240, 0, 480, 987 };
-        D3DXVECTOR3 center1(120.0f, 493.5f, 0.0f);
-        D3DXVECTOR3 pos1(120.0f, 0.0f, 0.0f);
-        g_sprite->Draw(g_texture, &rc1, &center1, &pos1, D3DCOLOR_XRGB(255, 255, 255));
-
-        RECT rc2 = { 0, 0, 240, 987 };
-        D3DXVECTOR3 center2(120.0f, 493.5f, 0.0f);
-        D3DXVECTOR3 pos2(-220.0f, 0.0f, 0.0f);
-        g_sprite->Draw(g_texture, &rc2, &center2, &pos2, D3DCOLOR_XRGB(255, 255, 255));
-        // ------- Game -------
-        g_game->OnRender(fElapsedTime);
-        // --------------------
-
-        g_sprite->End();
-
-        // Line
-        g_hLine[0] = D3DXVECTOR3(-1000.0f, -1000.0f, 0.3f);
-        g_hLine[1] = D3DXVECTOR3( 1000.0f, -1000.0f, 0.3f);
-                                                       
-        g_vLine[0] = D3DXVECTOR3(-1000.0f, -1000.0f, 0.3f);
-        g_vLine[1] = D3DXVECTOR3(-1000.0f,  1000.0f, 0.3f);
-
-        
         g_pLine->SetAntialias(false);
         g_pLine->SetWidth(1.0f);
 
@@ -208,8 +173,8 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
         //D3DXMatrixPerspectiveFovLH(&g_matrix, D3DX_PI / 4.0f, 1.0f, 0.3f, 224.5f);
         for (int i = 0; i <= 200; i++) {
             // g_pLine->Draw(g_hLine, std::size(g_hLine), D3DCOLOR_XRGB(128, 128, 128)
-            g_pLine->DrawTransform(g_hLine, std::size(g_hLine), &m, D3DCOLOR_XRGB(128, 128, 128));
-            g_pLine->DrawTransform(g_vLine, std::size(g_vLine), &m, D3DCOLOR_XRGB(128, 128, 128));
+            g_pLine->DrawTransform(g_hLine, std::size(g_hLine), &g_matrix, D3DCOLOR_XRGB(128, 128, 128));
+            g_pLine->DrawTransform(g_vLine, std::size(g_vLine), &g_matrix, D3DCOLOR_XRGB(128, 128, 128));
 
             g_hLine[0] += D3DXVECTOR3(0.0f, 10.0f, 0.0f);
             g_hLine[1] += D3DXVECTOR3(0.0f, 10.0f, 0.0f);
@@ -218,7 +183,15 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
             g_vLine[1] += D3DXVECTOR3(10.0f, 0.0f, 0.0f);
         }
 
+        //g_createTexture->Draw();
+        // ------- Game -------
+        g_game->OnRender(fElapsedTime);
+        // --------------------
+
         g_pLine->End();
+
+        g_sprite->End();
+
         V( pd3dDevice->EndScene() );
     }
 }
@@ -273,7 +246,6 @@ void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
     // --------------------
 
     SAFE_RELEASE(g_sprite);
-    SAFE_RELEASE(g_texture);
     SAFE_RELEASE(g_pLine);
 }
 

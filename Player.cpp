@@ -3,72 +3,64 @@
 
 #include "InputManager.hpp"
 
-extern D3DXMATRIX                  g_matrix;
+extern D3DXMATRIXA16               g_matrix;
 
 Player::Player() noexcept :
-	m_position(0.0f, 0.0f),
-	m_direction(0.0f, 0.0f),
-	m_speed(5.0f)
+	m_plane(-50.0f, -50.0f, 50.0f, 50.0f),
+	m_position(210.0f, 210.0f, 0.0f),
+	m_direction(0.0f, 0.0f, 0.0f),
+	m_speed(200.0f),
+	m_isTurned(false)
 {
-	auto device = DXUTGetD3D9Device();
+	m_drawRect = std::make_shared<DrawRect>();
+	m_drawRect->SetColor(D3DCOLOR_XRGB(255, 0, 0));
 
-	D3DXCreateLine(device, &m_line);
-
-
-	m_vertexList[0] = D3DXVECTOR2( 0.5f,  0.5f);
-	m_vertexList[1] = D3DXVECTOR2( 0.5f, -0.5f);
-	m_vertexList[2] = D3DXVECTOR2(-0.5f, -0.5f);
-	m_vertexList[3] = D3DXVECTOR2(-0.5f,  0.5f);
-	m_vertexList[4] = D3DXVECTOR2( 0.5f,  0.5f);
+	m_texture = std::make_shared<Texture>(L"Res/Player/default.png");
 }
 
 Player::~Player()
 {
-	SAFE_RELEASE(m_line);
+	m_drawRect.reset();
+	m_texture.reset();
 }
 
 void Player::OnUpdate(float fElapsedTime)
 {
 	// ------- Player Control -------
-	m_direction = D3DXVECTOR2(0.0f, 0.0f);
+	m_direction = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_isTurned = false;
 	if (g_inputManager->GetKeyPush(DIK_LEFT) == true) {
-		m_direction = D3DXVECTOR2(1.0f, 0.0f);
+		m_direction = D3DXVECTOR3(-1.0f, 0.0f, 0.0f);
+		m_isTurned = true;
 	}
 	if (g_inputManager->GetKeyPush(DIK_RIGHT) == true) {
-		m_direction = D3DXVECTOR2(-1.0f, 0.0f);
+		m_direction = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
+		m_isTurned = true;
 	}
 	if (g_inputManager->GetKeyPush(DIK_UP) == true) {
-		m_direction = D3DXVECTOR2(0.0f, 1.0f);
+		m_direction = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
+		m_isTurned = true;
 	}
 	if (g_inputManager->GetKeyPush(DIK_DOWN) == true) {
-		m_direction = D3DXVECTOR2(0.0f, -1.0f);
+		m_direction = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+		m_isTurned = true;
 	}
+	m_position += (m_direction * m_speed * fElapsedTime);
 	// ------------------------------
 
-	//m_position += m_direction * fElapsedTime;
+	m_drawRect->SetPlane(this->GetPlane());
+	m_drawRect->OnUpdate(fElapsedTime);
 }
 
 void Player::OnLateUpdate(float fElapsedTime)
 {
-	for (UINT index = 0; index < std::size(m_vertexList); index++) {
-		m_vertexList[index] += (m_position + (m_direction * m_speed * fElapsedTime));
-	}
 }
 
 void Player::OnRender(float fElapsedTime)
 {
-	m_line->Begin();
-	m_line->Draw(m_vertexList, std::size(m_vertexList), D3DCOLOR_XRGB(255, 0, 0));
-	//m_line->DrawTransform(m_vertexList.data(), m_vertexList.size(), &g_matrix, D3DCOLOR_XRGB(128, 128, 128));
-	m_line->End();
-}
+	m_texture->SetScale(D3DXVECTOR2(0.1f, 0.1f));
+	m_texture->SetPosition(m_position);
+	m_texture->Draw();
 
-void Player::OnResetDevice()
-{
-	m_line->OnResetDevice();
-}
-
-void Player::OnLostDevice()
-{
-	m_line->OnLostDevice();
+	m_drawRect->OnRender(fElapsedTime);
 }

@@ -144,6 +144,15 @@
     <ClInclude Include="Texture.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="IObject.hpp">
+      <Filter>Game\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawRect.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CLInclude Include="resource.h">

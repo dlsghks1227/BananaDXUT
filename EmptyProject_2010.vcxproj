@@ -392,8 +392,11 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneStateMachine.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClInclude Include="Collision.h" />
+    <ClInclude Include="DrawRect.hpp" />
     <ClInclude Include="Event.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="IObject.hpp" />
     <ClInclude Include="IScene.hpp" />
     <ClInclude Include="MainScene.h" />
     <ClInclude Include="Map.h" />

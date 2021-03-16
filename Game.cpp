@@ -23,6 +23,12 @@ Game::Game() noexcept
 	m_sceneStateMachine.Add(L"MainScene", m_mainScene);
 }
 
+Game::~Game()
+{
+	m_menuScene.reset();
+	m_mainScene.reset();
+}
+
 void Game::OnCreateDevice()
 {
 	m_sceneStateMachine.SwitchTo(L"MainScene");
