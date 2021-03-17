@@ -4,7 +4,7 @@
 #include "DXUTsettingsdlg.h"
 
 #include "event.hpp"
-#include "MenuScene.h"
+#include "MenuScene.hpp"
 
 extern CDXUTDialogResourceManager	g_dialogResourceManager;
 

@@ -74,7 +74,7 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
     HRESULT hr = S_OK;
     V_RETURN(g_dialogResourceManager.OnD3D9CreateDevice(pd3dDevice));
 
-    V(D3DXCreateSprite(pd3dDevice, &g_sprite));
+    V_RETURN(D3DXCreateSprite(pd3dDevice, &g_sprite));
 
     g_game->OnCreateDevice();
 

@@ -113,6 +113,9 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="ObjectCollection.cpp">
+      <Filter>Game\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header.hpp" />
@@ -129,13 +132,13 @@
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Event.hpp" />
-    <ClInclude Include="MenuScene.h">
+    <ClInclude Include="MenuScene.hpp">
       <Filter>Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="MainScene.h">
+    <ClInclude Include="MainScene.hpp">
       <Filter>Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
+    <ClInclude Include="Map.hpp">
       <Filter>Game\Object\Map</Filter>
     </ClInclude>
     <ClInclude Include="Player.hpp">
@@ -150,8 +153,11 @@
     <ClInclude Include="DrawRect.hpp">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h">
+    <ClInclude Include="Collision.hpp">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectCollection.h">
+      <Filter>Game\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

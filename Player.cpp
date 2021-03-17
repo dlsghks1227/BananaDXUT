@@ -6,14 +6,14 @@
 extern D3DXMATRIXA16               g_matrix;
 
 Player::Player() noexcept :
-	m_plane(-50.0f, -50.0f, 50.0f, 50.0f),
-	m_position(210.0f, 210.0f, 0.0f),
 	m_direction(0.0f, 0.0f, 0.0f),
 	m_speed(200.0f),
 	m_isTurned(false)
 {
 	m_drawRect = std::make_shared<DrawRect>();
 	m_drawRect->SetColor(D3DCOLOR_XRGB(255, 0, 0));
+
+	m_plane = D3DXPLANE(-50.0f, -50.0f, 50.0f, 50.0f);
 
 	m_texture = std::make_shared<Texture>(L"Res/Player/default.png");
 }

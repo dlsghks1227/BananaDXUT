@@ -3,7 +3,8 @@
 #include "IScene.hpp"
 #include "header.hpp"
 
-#include "Map.h"
+#include "ObjectCollection.h"
+#include "Map.hpp"
 #include "Player.hpp"
 
 class MainScene final : public IScene
@@ -34,8 +35,9 @@ public:
 	LRESULT MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext) override;
 
 private:
-	std::unique_ptr<Map>		m_map;
-	std::unique_ptr<Player>		m_player;
+	ObjectCollection			m_objectCollection;
+	//std::shared_ptr<Player>		m_player;
+	//std::shared_ptr<Map>		m_map;
 
 	bool	m_isInside;
 	RECT	m_addRect;

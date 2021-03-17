@@ -29,19 +29,8 @@ public:
 		std::wcout << "Add Rect\n";
 	}
 
-	D3DXPLANE	GetPlane() {
-		return D3DXPLANE(
-			m_plane.a + m_position.x,
-			m_plane.b + m_position.y,
-			m_plane.c + m_position.x,
-			m_plane.d + m_position.y
-		);
-	}
 	D3DXVECTOR2	GetMapSize() {
 		return m_mapSize;
-	}
-	D3DXVECTOR3	GetPosition() {
-		return m_position;
 	}
 
 private:
@@ -49,7 +38,5 @@ private:
 	std::shared_ptr<Texture>	m_texture;
 	std::vector<RECT>			m_mapRects;
 
-	D3DXPLANE					m_plane;
-	D3DXVECTOR3					m_position;
 	D3DXVECTOR2					m_mapSize;
 };

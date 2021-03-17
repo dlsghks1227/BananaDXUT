@@ -1,19 +1,18 @@
 #include "DXUT.h"
-#include "Map.h"
+#include "Map.hpp"
 
 
-Map::Map() noexcept :
-	m_position(0.0f, 0.0f, 0.0f)
+Map::Map() noexcept
 {
 	m_texture = std::make_shared<Texture>(L"Res/background.jpg");
 	m_mapSize = D3DXVECTOR2(
 		static_cast<float>(m_texture->GetWidth()),
 		static_cast<float>(m_texture->GetHeight()));
 	m_plane = D3DXPLANE(
-		m_mapSize.x * -0.5,
-		m_mapSize.y * -0.5,
-		m_mapSize.x *  0.5,
-		m_mapSize.y *  0.5
+		m_mapSize.x * -0.5f,
+		m_mapSize.y * -0.5f,
+		m_mapSize.x *  0.5f,
+		m_mapSize.y *  0.5f
 	);
 
 	m_drawRect = std::make_shared<DrawRect>();

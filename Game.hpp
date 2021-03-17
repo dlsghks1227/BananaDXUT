@@ -6,8 +6,8 @@
 #include "header.hpp"
 
 #include "SceneStateMachine.hpp"
-#include "MenuScene.h"
-#include "MainScene.h"
+#include "MenuScene.hpp"
+#include "MainScene.hpp"
 
 class Game final
 {
