@@ -15,7 +15,8 @@ Player::Player() noexcept :
 
 	m_plane = D3DXPLANE(-50.0f, -50.0f, 50.0f, 50.0f);
 
-	m_texture = std::make_shared<Texture>(L"Res/Player/default.png");
+	m_texture = std::make_shared<Texture>();
+	m_texture->LoadFromFile(L"Res/Player/default.png");
 }
 
 Player::~Player()
@@ -45,7 +46,7 @@ void Player::OnUpdate(float fElapsedTime)
 		m_direction = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		m_isTurned = true;
 	}
-	m_position += (m_direction * m_speed * fElapsedTime);
+	m_transform->AddPosition((m_direction * m_speed * fElapsedTime));
 	// ------------------------------
 
 	m_drawRect->SetPlane(this->GetPlane());
@@ -59,7 +60,7 @@ void Player::OnLateUpdate(float fElapsedTime)
 void Player::OnRender(float fElapsedTime)
 {
 	m_texture->SetScale(D3DXVECTOR2(0.1f, 0.1f));
-	m_texture->SetPosition(m_position);
+	m_texture->SetPosition(m_transform->GetPosition());
 	m_texture->Draw();
 
 	m_drawRect->OnRender(fElapsedTime);

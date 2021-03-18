@@ -2,12 +2,12 @@
 #include "DXUT.h"
 #include "header.hpp"
 
-#include "IObject.hpp"
+#include "Object.hpp"
 #include "texture.h"
 
 #include "DrawRect.hpp"
 
-class Player final : public IObject
+class Player final : public Object
 {
 public:
 	Player() noexcept;
@@ -19,10 +19,10 @@ public:
 	Player(Player const&) = delete;
 	Player& operator = (Player const&) = delete;
 
-	void		OnUpdate(float fElapsedTime)		 override;
-	void		OnLateUpdate(float fElapsedTime)	 override;
+	void		OnUpdate(float fElapsedTime);
+	void		OnLateUpdate(float fElapsedTime);
 
-	void		OnRender(float fElapsedTime)		 override;
+	void		OnRender(float fElapsedTime);
 
 
 	bool		isTurned() { return m_isTurned; }

@@ -2,7 +2,7 @@
 #include "DXUT.h"
 #include "header.hpp"
 
-#include "IObject.hpp"
+#include "Object.hpp"
 
 class ObjectCollection final
 {
@@ -16,7 +16,7 @@ public:
 	ObjectCollection(ObjectCollection const&) = delete;
 	ObjectCollection& operator = (ObjectCollection const&) = delete;
 
-	void	Add(std::shared_ptr<IObject> object);
+	void	Add(std::shared_ptr<Object> object);
 	void	AllObjectRelelase();
 
 	void	OnUpdate(float fElapsedTime);
@@ -25,7 +25,8 @@ public:
 	void	OnRender(float fElapsedTime);
 
 	void	ProcessNewObjects();
+
 private:
-	std::vector<std::shared_ptr<IObject>>		m_objects;
-	std::vector<std::shared_ptr<IObject>>		m_newObjects;
+	std::vector<std::shared_ptr<Object>>		m_objects;
+	std::vector<std::shared_ptr<Object>>		m_newObjects;
 };

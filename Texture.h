@@ -5,10 +5,13 @@
 class Texture
 {
 public:
-	Texture(std::wstring const& path) noexcept;
+	Texture() noexcept;
 	~Texture();
 
+	HRESULT		LoadFromFile(std::wstring const& path);
 	void		Draw(RECT const* rect = nullptr, bool isCenter = true);
+	void		Release();
+
 	UINT		GetWidth()		{ return m_textureInfo.Width; }
 	UINT		GetHeight()		{ return m_textureInfo.Height; }
 

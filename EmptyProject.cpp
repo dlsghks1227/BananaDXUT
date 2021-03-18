@@ -10,7 +10,6 @@
 
 #include "resource.h"
 
-
 #include "header.hpp"
 #include "event.hpp"
 
@@ -19,7 +18,6 @@
 #include "SceneStateMachine.hpp"
 
 #include "Texture.h"
-
 //--------------------------------------------------------------------------------------
 // Global variables
 //--------------------------------------------------------------------------------------

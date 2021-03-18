@@ -5,7 +5,7 @@ ObjectCollection::ObjectCollection() noexcept
 {
 }
 
-void ObjectCollection::Add(std::shared_ptr<IObject> object)
+void ObjectCollection::Add(std::shared_ptr<Object> object)
 {
 	m_newObjects.push_back(object);
 }

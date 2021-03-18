@@ -2,12 +2,12 @@
 #include "DXUT.h"
 #include "header.hpp"
 
-#include "IObject.hpp"
+#include "Object.hpp"
 #include "Texture.h"
 
 #include "DrawRect.hpp"
 
-class Map : public IObject
+class Map : public Object
 {
 public:
 	Map() noexcept;
@@ -19,10 +19,10 @@ public:
 	Map(Map const&) = delete;
 	Map& operator = (Map const&) = delete;
 
-	void		OnUpdate(float fElapsedTime)		override;
-	void		OnLateUpdate(float fElapsedTime)	override;
+	void		OnUpdate(float fElapsedTime);
+	void		OnLateUpdate(float fElapsedTime);
 
-	void		OnRender(float fElapsedTime)		override;
+	void		OnRender(float fElapsedTime);
 
 	void		AddMap(RECT rect) {
 		m_mapRects.push_back(rect);

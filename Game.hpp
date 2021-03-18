@@ -38,6 +38,8 @@ public:
 private:
 	CDXUTDialog					m_HUD;
 
+	ResourceAllocator<Texture>	m_textureAllocator;
+
 	SceneStateMachine			m_sceneStateMachine;
 	std::shared_ptr<MenuScene>	m_menuScene;
 	std::shared_ptr<MainScene>	m_mainScene;

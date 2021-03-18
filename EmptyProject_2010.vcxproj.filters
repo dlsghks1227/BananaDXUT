@@ -27,6 +27,9 @@
     <Filter Include="Game\Object\Player">
       <UniqueIdentifier>{df27b212-e4f5-4f2d-9370-1cceda50d8b3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game\Component">
+      <UniqueIdentifier>{8e8fcf9f-1581-4fcf-b86c-576204923c1c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="DXUT\Optional\directx.ico">
@@ -116,6 +119,12 @@
     <ClCompile Include="ObjectCollection.cpp">
       <Filter>Game\Object</Filter>
     </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Game\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Game\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header.hpp" />
@@ -147,7 +156,7 @@
     <ClInclude Include="Texture.h">
       <Filter>Game</Filter>
     </ClInclude>
-    <ClInclude Include="IObject.hpp">
+    <ClInclude Include="Object.hpp">
       <Filter>Game\Object</Filter>
     </ClInclude>
     <ClInclude Include="DrawRect.hpp">
@@ -158,6 +167,18 @@
     </ClInclude>
     <ClInclude Include="ObjectCollection.h">
       <Filter>Game\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.hpp">
+      <Filter>Game\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.hpp">
+      <Filter>Game\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.hpp">
+      <Filter>Game\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceAllocator.hpp">
+      <Filter>Game\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

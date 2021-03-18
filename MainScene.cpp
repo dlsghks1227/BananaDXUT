@@ -3,7 +3,8 @@
 
 #include "Collision.hpp"
 
-MainScene::MainScene() noexcept :
+MainScene::MainScene(ResourceAllocator<Texture>& textureAllocator) noexcept :
+	m_textureAllocator(textureAllocator),
 	m_isInside(false),
 	m_addRect{0, 0, 0, 0}
 {
@@ -16,11 +17,16 @@ MainScene::~MainScene()
 
 void MainScene::OnEnterScene()
 {
-	std::shared_ptr<Player>		m_player = std::make_shared<Player>();;
-	std::shared_ptr<Map>		m_map = std::make_shared<Map>();
+	std::shared_ptr<Object>		m_player = std::make_shared<Object>();
+	auto sprite = m_player->AddComponent<Sprite>();
+	sprite->SetTextureAllocator(&m_textureAllocator);
+	sprite->LoadTexture(L"Res/Player/default.png");
+
+	//std::shared_ptr<Map>		m_map = std::make_shared<Map>();
+
 
 	m_objectCollection.Add(m_player);
-	m_objectCollection.Add(m_map);
+	//m_objectCollection.Add(m_map);
 }
 
 void MainScene::OnExitScene()

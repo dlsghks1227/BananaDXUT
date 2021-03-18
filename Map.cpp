@@ -4,7 +4,8 @@
 
 Map::Map() noexcept
 {
-	m_texture = std::make_shared<Texture>(L"Res/background.jpg");
+	m_texture = std::make_shared<Texture>();
+	m_texture->LoadFromFile(L"Res/background.jpg");
 	m_mapSize = D3DXVECTOR2(
 		static_cast<float>(m_texture->GetWidth()),
 		static_cast<float>(m_texture->GetHeight()));

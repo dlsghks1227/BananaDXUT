@@ -1,16 +1,24 @@
 #pragma once
 #include "DXUT.h"
-#include "IScene.hpp"
 #include "header.hpp"
 
+#include "IScene.hpp"
+
+#include "ResourceAllocator.hpp"
+
+#include "Object.hpp"
 #include "ObjectCollection.h"
+
+#include "Transform.hpp"
+#include "Sprite.hpp"
+
 #include "Map.hpp"
 #include "Player.hpp"
 
 class MainScene final : public IScene
 {
 public:
-	MainScene() noexcept;
+	MainScene(ResourceAllocator<Texture>& textureAllocator) noexcept;
 	~MainScene();
 
 	MainScene(MainScene&&) = default;
@@ -35,6 +43,7 @@ public:
 	LRESULT MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext) override;
 
 private:
+	ResourceAllocator<Texture>& m_textureAllocator;
 	ObjectCollection			m_objectCollection;
 	//std::shared_ptr<Player>		m_player;
 	//std::shared_ptr<Map>		m_map;

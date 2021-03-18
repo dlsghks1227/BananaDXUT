@@ -17,7 +17,7 @@ Game::Game() noexcept
 	m_HUD.AddButton(static_cast<int>(UI_CONTROL_ID::IDC_TOGGLEFULLSCREEN), L"Toggle full screen", 35, 10, 125, 22);
 
 	m_menuScene = std::make_shared<MenuScene>();
-	m_mainScene = std::make_shared<MainScene>();
+	m_mainScene = std::make_shared<MainScene>(m_textureAllocator);
 
 	m_sceneStateMachine.Add(L"MenuScene", m_menuScene);
 	m_sceneStateMachine.Add(L"MainScene", m_mainScene);
@@ -66,6 +66,7 @@ void Game::OnLostDevice()
 
 void Game::OnDestoryDevice()
 {
+	m_textureAllocator.AllRemove();
 	m_sceneStateMachine.OnDestoryDevice();
 }
 
