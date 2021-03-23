@@ -12,29 +12,59 @@
       <UniqueIdentifier>{2c3d4c8c-5d1a-459a-a05a-a4e4b608a44e}</UniqueIdentifier>
       <Extensions>fx;fxh;hlsl</Extensions>
     </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{830ed07a-494e-4dfb-9cf9-b6d692696174}</UniqueIdentifier>
+    <Filter Include="1. Setting">
+      <UniqueIdentifier>{75d216b1-f5f2-43cf-9839-addb29cbe27e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Scene">
-      <UniqueIdentifier>{3d1718f6-0e4a-4054-aa61-055edb11372a}</UniqueIdentifier>
+    <Filter Include="2. Input &amp; Scene">
+      <UniqueIdentifier>{3baa06e4-7ca5-4dfa-92f8-583d9bb7c541}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Object">
-      <UniqueIdentifier>{5ab444d8-119f-4687-8d49-dd90e5bbc17a}</UniqueIdentifier>
+    <Filter Include="2. Input &amp; Scene\Input">
+      <UniqueIdentifier>{560867c9-9220-4666-8251-805e2dde735b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Component">
+    <Filter Include="2. Input &amp; Scene\Scene">
+      <UniqueIdentifier>{d1fa6841-9548-40ba-b767-0aea447c755f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3. Component &amp; Resource">
+      <UniqueIdentifier>{02191120-2b94-4c36-b543-0b81f5d61fa5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3. Component &amp; Resource\Resources">
+      <UniqueIdentifier>{81c63172-960c-48f4-a1ce-4dfeb0b3c4dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. Object">
+      <UniqueIdentifier>{dcc733d7-a0aa-4194-b84e-8d08753955ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="4. Object\Object">
+      <UniqueIdentifier>{52add4dd-5aa7-413e-ac08-d43569466aa0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3. Component &amp; Resource\Component">
+      <UniqueIdentifier>{15c82e0f-5b9b-41bd-987b-a40bc056a352}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. AddScene">
+      <UniqueIdentifier>{c3fbb778-ab4c-4fff-b11d-7aeee9ec42ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="6. AddComponent">
+      <UniqueIdentifier>{974757fb-6eb3-4905-98bd-383e8545c3df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="6. AddComponent\Component">
       <UniqueIdentifier>{8e8fcf9f-1581-4fcf-b86c-576204923c1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Component\PlayerComponent">
+    <Filter Include="6. AddComponent\Component\PlayerComponent">
       <UniqueIdentifier>{97986c92-9b5f-43e9-8fa6-e1615a6d20f9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Component\EnemyComponent">
+    <Filter Include="6. AddComponent\Component\EnemyComponent">
       <UniqueIdentifier>{4e2c6989-edaf-4616-826c-6a894f25b755}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Component\ItemComponent">
+    <Filter Include="6. AddComponent\Component\ItemComponent">
       <UniqueIdentifier>{22aab18a-a9b8-47b3-9bb0-0f8803f95449}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Component\StageComponent">
+    <Filter Include="6. AddComponent\Component\StageComponent">
       <UniqueIdentifier>{367d6653-d811-4138-a58c-f875e692def5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="5. AddScene\Scene">
+      <UniqueIdentifier>{3d1718f6-0e4a-4054-aa61-055edb11372a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Debug">
+      <UniqueIdentifier>{18dc348f-a671-4f78-bbed-61037da77b72}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -98,108 +128,106 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EmptyProject.cpp" />
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneStateMachine.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="MenuScene.cpp">
-      <Filter>Game\Scene</Filter>
+      <Filter>5. AddScene\Scene</Filter>
     </ClCompile>
     <ClCompile Include="MainScene.cpp">
-      <Filter>Game\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
-    <ClCompile Include="ObjectCollection.cpp">
-      <Filter>Game\Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Game\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>Game\Component</Filter>
+      <Filter>5. AddScene\Scene</Filter>
     </ClCompile>
     <ClCompile Include="PlayerComponent.cpp">
-      <Filter>Game\Component\PlayerComponent</Filter>
+      <Filter>6. AddComponent\Component\PlayerComponent</Filter>
     </ClCompile>
     <ClCompile Include="EnemyComponent.cpp">
-      <Filter>Game\Component\EnemyComponent</Filter>
+      <Filter>6. AddComponent\Component\EnemyComponent</Filter>
     </ClCompile>
     <ClCompile Include="ItemComponent.cpp">
-      <Filter>Game\Component\ItemComponent</Filter>
+      <Filter>6. AddComponent\Component\ItemComponent</Filter>
     </ClCompile>
     <ClCompile Include="StageComponent.cpp">
-      <Filter>Game\Component\StageComponent</Filter>
+      <Filter>6. AddComponent\Component\StageComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="InputManager.cpp">
+      <Filter>2. Input &amp; Scene\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneStateMachine.cpp">
+      <Filter>2. Input &amp; Scene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectCollection.cpp">
+      <Filter>4. Object\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>3. Component &amp; Resource\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>3. Component &amp; Resource\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>3. Component &amp; Resource\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="header.hpp" />
-    <ClInclude Include="InputManager.hpp">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneStateMachine.hpp">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="IScene.hpp">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.hpp">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Event.hpp" />
     <ClInclude Include="MenuScene.hpp">
-      <Filter>Game\Scene</Filter>
+      <Filter>5. AddScene\Scene</Filter>
     </ClInclude>
     <ClInclude Include="MainScene.hpp">
-      <Filter>Game\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.hpp">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Object.hpp">
-      <Filter>Game\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawRect.hpp">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Collision.hpp">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="ObjectCollection.h">
-      <Filter>Game\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Component.hpp">
-      <Filter>Game\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.hpp">
-      <Filter>Game\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Sprite.hpp">
-      <Filter>Game\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceAllocator.hpp">
-      <Filter>Game\Component</Filter>
+      <Filter>5. AddScene\Scene</Filter>
     </ClInclude>
     <ClInclude Include="PlayerComponent.hpp">
-      <Filter>Game\Component\PlayerComponent</Filter>
+      <Filter>6. AddComponent\Component\PlayerComponent</Filter>
     </ClInclude>
     <ClInclude Include="EnemyComponent.hpp">
-      <Filter>Game\Component\EnemyComponent</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawLine.hpp">
-      <Filter>Game</Filter>
+      <Filter>6. AddComponent\Component\EnemyComponent</Filter>
     </ClInclude>
     <ClInclude Include="ItemComponent.hpp">
-      <Filter>Game\Component\ItemComponent</Filter>
+      <Filter>6. AddComponent\Component\ItemComponent</Filter>
     </ClInclude>
     <ClInclude Include="StageComponent.hpp">
-      <Filter>Game\Component\StageComponent</Filter>
+      <Filter>6. AddComponent\Component\StageComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.hpp">
+      <Filter>1. Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="header.hpp">
+      <Filter>1. Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.hpp" />
+    <ClInclude Include="InputManager.hpp">
+      <Filter>2. Input &amp; Scene\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneStateMachine.hpp">
+      <Filter>2. Input &amp; Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.hpp">
+      <Filter>4. Object\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectCollection.h">
+      <Filter>4. Object\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="IScene.hpp">
+      <Filter>2. Input &amp; Scene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.hpp">
+      <Filter>3. Component &amp; Resource\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceAllocator.hpp">
+      <Filter>3. Component &amp; Resource\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.hpp">
+      <Filter>3. Component &amp; Resource\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.hpp">
+      <Filter>3. Component &amp; Resource\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.hpp">
+      <Filter>3. Component &amp; Resource\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.hpp" />
+    <ClInclude Include="DrawRect.hpp">
+      <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawLine.hpp">
+      <Filter>Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@
 //
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
+
 #include "DXUT.h"
 #include "SDKmisc.h"
 #include "DXUTCamera.h"
@@ -10,11 +11,14 @@
 
 #include "resource.h"
 
+// ---- 1. Setting 이후 ----
 #include "header.hpp"
-#include "event.hpp"
+#include "Event.hpp"
 
+// ---- 2. Input & Object 이후 ----
 #include "Game.hpp"
 #include "InputManager.hpp"
+
 #include "SceneStateMachine.hpp"
 
 //--------------------------------------------------------------------------------------
@@ -25,10 +29,6 @@ D3DXMATRIXA16               g_matrix;
 
 LPD3DXSPRITE                g_sprite;
 LPD3DXLINE                  g_pLine;
-
-D3DXVECTOR3                 g_hLine[2];
-D3DXVECTOR3                 g_vLine[2];
-
 
 namespace
 {
@@ -71,11 +71,9 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
     V_RETURN(g_dialogResourceManager.OnD3D9CreateDevice(pd3dDevice));
 
     V_RETURN(D3DXCreateSprite(pd3dDevice, &g_sprite));
+    V_RETURN(D3DXCreateLine(pd3dDevice, &g_pLine));
 
     g_game->OnCreateDevice();
-
-    D3DXCreateLine(pd3dDevice, &g_pLine);
-
     g_inputManager->Initialize();
 
     return S_OK;
@@ -94,12 +92,9 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFA
     V_RETURN(g_dialogResourceManager.OnD3D9ResetDevice());
 
     g_sprite->OnResetDevice();
-
-    // ------- Game -------
-    g_game->OnResetDevice();
-    // --------------------
-
     g_pLine->OnResetDevice();
+
+    g_game->OnResetDevice();
 
     return S_OK;
 }
@@ -110,10 +105,8 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFA
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // ------- Game -------
     g_game->OnUpdate(fElapsedTime);
     g_game->OnLateUpdate(fElapsedTime);
-    // --------------------
 
     g_inputManager->KeyBoardUpdate();
 }
@@ -144,35 +137,11 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
     // Render the scene
     if( SUCCEEDED( pd3dDevice->BeginScene() ) )
     {
-        // Line
-        g_hLine[0] = D3DXVECTOR3(-1000.0f, -1000.0f, 1.0f);
-        g_hLine[1] = D3DXVECTOR3( 1000.0f, -1000.0f, 1.0f);
-                                                     
-        g_vLine[0] = D3DXVECTOR3(-1000.0f, -1000.0f, 1.0f);
-        g_vLine[1] = D3DXVECTOR3(-1000.0f,  1000.0f, 1.0f);
-
         g_sprite->SetTransform(&worldMatrix);
         g_sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
 
         g_pLine->SetAntialias(false);
         g_pLine->SetWidth(1.0f);
-
-        g_pLine->Begin();
-
-        //D3DXMatrixIdentity(&g_matrix);
-        //D3DXMatrixPerspectiveFovLH(&g_matrix, D3DX_PI / 4.0f, 1.0f, 0.3f, 224.5f);
-        for (int i = 0; i <= 200; i++) {
-            // g_pLine->Draw(g_hLine, std::size(g_hLine), D3DCOLOR_XRGB(128, 128, 128)
-            g_pLine->DrawTransform(g_hLine, std::size(g_hLine), &g_matrix, D3DCOLOR_XRGB(128, 128, 128));
-            g_pLine->DrawTransform(g_vLine, std::size(g_vLine), &g_matrix, D3DCOLOR_XRGB(128, 128, 128));
-
-            g_hLine[0] += D3DXVECTOR3(0.0f, 10.0f, 0.0f);
-            g_hLine[1] += D3DXVECTOR3(0.0f, 10.0f, 0.0f);
-
-            g_vLine[0] += D3DXVECTOR3(10.0f, 0.0f, 0.0f);
-            g_vLine[1] += D3DXVECTOR3(10.0f, 0.0f, 0.0f);
-        }
-        g_pLine->End();
 
         //g_createTexture->Draw();
         // ------- Game -------
@@ -238,9 +207,7 @@ void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 {
     g_dialogResourceManager.OnD3D9DestroyDevice();
 
-    // ------- Game -------
     g_game->OnDestoryDevice();
-    // --------------------
 
     SAFE_RELEASE(g_sprite);
     SAFE_RELEASE(g_pLine);

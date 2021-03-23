@@ -1,5 +1,4 @@
 #pragma once
-
 #pragma comment(lib, "legacy_stdio_definitions.lib")
 #pragma comment(lib, "dinput8.lib")
 

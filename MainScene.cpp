@@ -17,8 +17,6 @@ void MainScene::OnEnterScene()
 {
 	m_objectCollection = std::make_shared<ObjectCollection>();
 
-
-
 	std::shared_ptr<Object>		player = std::make_shared<Object>();
 
 	auto playerSprite = player->AddComponent<Sprite>();
