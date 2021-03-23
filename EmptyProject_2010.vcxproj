@@ -384,33 +384,38 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EnemyComponent.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="ItemComponent.cpp" />
     <ClCompile Include="MainScene.cpp" />
-    <ClCompile Include="Map.cpp" />
     <ClCompile Include="MenuScene.cpp" />
+    <ClCompile Include="PlayerComponent.cpp" />
     <ClCompile Include="ObjectCollection.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneStateMachine.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="StageComponent.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClInclude Include="Collision.hpp" />
     <ClInclude Include="Component.hpp" />
+    <ClInclude Include="DrawLine.hpp" />
     <ClInclude Include="DrawRect.hpp" />
+    <ClInclude Include="EnemyComponent.hpp" />
     <ClInclude Include="Event.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="ItemComponent.hpp" />
+    <ClInclude Include="PlayerComponent.hpp" />
     <ClInclude Include="Object.hpp" />
     <ClInclude Include="IScene.hpp" />
     <ClInclude Include="MainScene.hpp" />
-    <ClInclude Include="Map.hpp" />
     <ClInclude Include="MenuScene.hpp" />
     <ClInclude Include="ObjectCollection.h" />
-    <ClInclude Include="Player.hpp" />
     <ClInclude Include="ResourceAllocator.hpp" />
     <ClInclude Include="SceneStateMachine.hpp" />
     <ClInclude Include="Sprite.hpp" />
-    <ClInclude Include="Texture.h" />
+    <ClInclude Include="StageComponent.hpp" />
+    <ClInclude Include="Texture.hpp" />
     <ClInclude Include="Transform.hpp" />
     <None Include="DXUT\Optional\directx.ico" />
     <ClInclude Include="DXUT\Core\DXUT.h" />

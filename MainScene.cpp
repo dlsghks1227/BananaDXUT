@@ -4,46 +4,61 @@
 #include "Collision.hpp"
 
 MainScene::MainScene(ResourceAllocator<Texture>& textureAllocator) noexcept :
-	m_textureAllocator(textureAllocator),
-	m_isInside(false),
-	m_addRect{0, 0, 0, 0}
+	m_textureAllocator(textureAllocator)
 {
 }
 
 MainScene::~MainScene()
 {
-	m_objectCollection.AllObjectRelelase();
+	m_objectCollection.reset();
 }
 
 void MainScene::OnEnterScene()
 {
-	std::shared_ptr<Object>		m_player = std::make_shared<Object>();
-	auto sprite = m_player->AddComponent<Sprite>();
-	sprite->SetTextureAllocator(&m_textureAllocator);
-	sprite->LoadTexture(L"Res/Player/default.png");
-
-	//std::shared_ptr<Map>		m_map = std::make_shared<Map>();
+	m_objectCollection = std::make_shared<ObjectCollection>();
 
 
-	m_objectCollection.Add(m_player);
-	//m_objectCollection.Add(m_map);
+
+	std::shared_ptr<Object>		player = std::make_shared<Object>();
+
+	auto playerSprite = player->AddComponent<Sprite>();
+	playerSprite->SetTextureAllocator(&m_textureAllocator);
+	playerSprite->LoadTexture(L"Res/Player/default.png");
+
+	auto movenent = player->AddComponent<PlayerComponent>();
+	player->m_transform->SetScale(0.05f, 0.05f);
+	player->m_transform->SetCenter();
+	player->m_transform->SetPosition(300.0f, 0.0f, 0.0f);
+
+	player->AddComponent<DrawRect>();
+
+
+	std::shared_ptr<Object>		stage = std::make_shared<Object>();
+	auto stageComponent = stage->AddComponent<StageComponent>();
+	stageComponent->Initialize(player.get(), m_objectCollection.get(), &m_textureAllocator, L"Res/Map.jpg");
+
+	stage->AddComponent<DrawRect>();
+
+	m_objectCollection->Add(player);
+	m_objectCollection->Add(stage);
 }
 
 void MainScene::OnExitScene()
 {
-	m_objectCollection.AllObjectRelelase();
+	m_objectCollection.reset();
 }
 
 void MainScene::OnUpdate(float fElapsedTime)
 {
-	m_objectCollection.ProcessNewObjects();
+	m_objectCollection->ProcessRemovals();
+	m_objectCollection->ProcessNewObjects();
 
-	m_objectCollection.OnUpdate(fElapsedTime);
+	m_objectCollection->OnUpdate(fElapsedTime);
 }
 
 void MainScene::OnLateUpdate(float fElapsedTime)
 {
-	m_objectCollection.OnLateUpdate(fElapsedTime);
+	m_objectCollection->OnLateUpdate(fElapsedTime);
 
 	//bool isCollision = Collision::BoundingBoxPointCollision(m_map->GetPlane(), m_player->GetPosition());
 	//if (m_isInside != isCollision) {
@@ -71,7 +86,7 @@ void MainScene::OnLateUpdate(float fElapsedTime)
 
 void MainScene::OnRender(float fElapsedTime)
 {
-	m_objectCollection.OnRender(fElapsedTime);
+	m_objectCollection->OnRender(fElapsedTime);
 }
 
 void MainScene::OnResetDevice()
@@ -84,7 +99,7 @@ void MainScene::OnLostDevice()
 
 void MainScene::OnDestroyDevice()
 {
-	m_objectCollection.AllObjectRelelase();
+	m_objectCollection.reset();
 }
 
 LRESULT MainScene::MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext)

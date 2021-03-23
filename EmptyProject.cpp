@@ -1,4 +1,4 @@
-//--------------------------------------------------------------------------------------
+ //--------------------------------------------------------------------------------------
 // File: EmptyProject.cpp
 //
 // Copyright (c) Microsoft Corporation. All rights reserved.
@@ -17,7 +17,6 @@
 #include "InputManager.hpp"
 #include "SceneStateMachine.hpp"
 
-#include "Texture.h"
 //--------------------------------------------------------------------------------------
 // Global variables
 //--------------------------------------------------------------------------------------
@@ -26,7 +25,6 @@ D3DXMATRIXA16               g_matrix;
 
 LPD3DXSPRITE                g_sprite;
 LPD3DXLINE                  g_pLine;
-
 
 D3DXVECTOR3                 g_hLine[2];
 D3DXVECTOR3                 g_vLine[2];
@@ -101,12 +99,6 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFA
     g_game->OnResetDevice();
     // --------------------
 
-    // ------- Camera -------
-    // float fAspectRatio = static_cast<FLOAT>(pBackBufferSurfaceDesc->Width) / static_cast<FLOAT>(pBackBufferSurfaceDesc->Height);
-    // g_camera.SetProjParams(D3DX_PI / 2.0f, fAspectRatio, 0.1f, 10000.0f);
-    // g_camera.SetWindow(pBackBufferSurfaceDesc->Width, pBackBufferSurfaceDesc->Height);
-    // ----------------------
-
     g_pLine->OnResetDevice();
 
     return S_OK;
@@ -180,18 +172,25 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
             g_vLine[0] += D3DXVECTOR3(10.0f, 0.0f, 0.0f);
             g_vLine[1] += D3DXVECTOR3(10.0f, 0.0f, 0.0f);
         }
+        g_pLine->End();
 
         //g_createTexture->Draw();
         // ------- Game -------
         g_game->OnRender(fElapsedTime);
         // --------------------
 
-        g_pLine->End();
-
         g_sprite->End();
 
         V( pd3dDevice->EndScene() );
     }
+}
+
+void CALLBACK MouseProc(bool bLeftButtonDown, bool bRightButtonDown, bool bMiddleButtonDown, bool bSideButton1Down, bool bSideButton2Down, int nMouseWheelDelta, int xPos, int yPos, void* pUserContext)
+{
+    g_inputManager->OnMouseMove(D3DXVECTOR2(
+        static_cast<float>(xPos),
+        static_cast<float>(yPos)
+    ));
 }
 
 
@@ -259,8 +258,7 @@ void CALLBACK OnGUIEvent(UINT nEvent, int nControlID, CDXUTControl* pControl, vo
 //--------------------------------------------------------------------------------------
 // Initialize everything and go into a render loop
 //--------------------------------------------------------------------------------------
-INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
-{
+INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int ){
     // Enable run-time memory check for debug builds.
 #if defined(DEBUG) | defined(_DEBUG)
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
@@ -275,6 +273,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     DXUTSetCallbackDeviceChanging( ModifyDeviceSettings );
     DXUTSetCallbackMsgProc( MsgProc );
     DXUTSetCallbackFrameMove( OnFrameMove );
+    DXUTSetCallbackMouse( MouseProc, true );
 
     // TODO: Perform any application-level initialization here
     g_game = std::make_unique<Game>();

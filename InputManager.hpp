@@ -27,24 +27,15 @@ public:
 	InputManager() noexcept;
 	~InputManager() = default;
 
-	void			Initialize();
-	void			KeyBoardUpdate();
+	void				Initialize();
+	void				KeyBoardUpdate();
 
-	void			OnLeftMousePressed(D3DXVECTOR2 const& pos);
-	void			OnLeftMouseReleased(D3DXVECTOR2 const& pos);
+	void				OnMouseMove(D3DXVECTOR2 const& pos) { m_mousePos = pos; }
+	const D3DXVECTOR2&	GetMousePos()						{ return m_mousePos; }
 
-	void			OnRightMousePressed(D3DXVECTOR2 const& pos);
-	void			OnRightMouseReleased(D3DXVECTOR2 const& pos);
-
-	void			OnMouseMove(D3DXVECTOR2 const& pos);
-	D3DXVECTOR2		GetMousePos()			{ return m_mousePos; }
-
-	bool			GetLeftMouseDown()		{ return m_leftMouseDown; }
-	bool			GetRightMouseDown()		{ return m_rightMouseDown; }
-
-	bool			GetKeyPressed(int vkey) { return m_keyState[vkey].GetPress(); }
-	bool			GetKeyPush(int vkey)	{ return m_keyState[vkey].GetPush(); }
-	bool			GetKeyRelease(int vkey) { return m_keyState[vkey].GetRelease(); }
+	bool				GetKeyPressed(int vkey)				{ return m_keyState[vkey].GetPress(); }
+	bool				GetKeyPush(int vkey)				{ return m_keyState[vkey].GetPush(); }
+	bool				GetKeyRelease(int vkey)				{ return m_keyState[vkey].GetRelease(); }
 
 
 public:
@@ -53,8 +44,6 @@ public:
 	BYTE											m_key[256];
 	KeyState										m_keyState[256];
 
-	bool											m_leftMouseDown;
-	bool											m_rightMouseDown;
 	D3DXVECTOR2										m_mousePos;
 
 };

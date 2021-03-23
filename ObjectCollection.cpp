@@ -5,12 +5,7 @@ ObjectCollection::ObjectCollection() noexcept
 {
 }
 
-void ObjectCollection::Add(std::shared_ptr<Object> object)
-{
-	m_newObjects.push_back(object);
-}
-
-void ObjectCollection::AllObjectRelelase()
+ObjectCollection::~ObjectCollection()
 {
 	for (auto& item : m_objects) {
 		item.reset();
@@ -47,12 +42,34 @@ void ObjectCollection::OnRender(float fElapsedTime)
 	}
 }
 
+void ObjectCollection::Add(std::shared_ptr<Object> object)
+{
+	m_newObjects.push_back(object);
+}
+
 void ObjectCollection::ProcessNewObjects()
 {
 	if (m_newObjects.size() > 0) {
-		//for (const auto& item : m_newObjects) {
-		//}
-		m_objects.assign(m_newObjects.begin(), m_newObjects.end());
+		for (const auto& item : m_newObjects) {
+			item->OnCreate();
+		}
+		m_objects.insert(m_objects.end(), m_newObjects.begin(), m_newObjects.end());
+
 		m_newObjects.clear();
+	}
+}
+
+void ObjectCollection::ProcessRemovals()
+{
+	auto itr = m_objects.begin();
+	while (itr != m_objects.end()) {
+		auto obj = **itr;
+
+		if (obj.IsQueuedForRemoval() == true) {
+			itr = m_objects.erase(itr);
+		}
+		else {
+			++itr;
+		}
 	}
 }

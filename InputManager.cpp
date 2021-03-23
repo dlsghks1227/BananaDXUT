@@ -4,8 +4,6 @@
 std::unique_ptr<InputManager> g_inputManager = std::make_unique<InputManager>();
 
 InputManager::InputManager() noexcept :
-	m_leftMouseDown(false),
-	m_rightMouseDown(false),
 	m_mousePos(D3DXVECTOR2(0.0f, 0.0f)),
 	m_key{ 0 }
 {
@@ -67,29 +65,4 @@ void InputManager::KeyBoardUpdate()
 			m_keyState[vkey].SetRelease(false);
 		}
 	}
-}
-
-void InputManager::OnLeftMousePressed(D3DXVECTOR2 const& pos)
-{
-	m_leftMouseDown = true;
-}
-
-void InputManager::OnLeftMouseReleased(D3DXVECTOR2 const& pos)
-{
-	m_leftMouseDown = false;
-}
-
-void InputManager::OnRightMousePressed(D3DXVECTOR2 const& pos)
-{
-	m_rightMouseDown = true;
-}
-
-void InputManager::OnRightMouseReleased(D3DXVECTOR2 const& pos)
-{
-	m_rightMouseDown = false;
-}
-
-void InputManager::OnMouseMove(D3DXVECTOR2 const& pos)
-{
-	m_mousePos = pos;
 }

@@ -11,33 +11,13 @@
 class Object
 {
 public:
-	Object() noexcept : m_plane(0.0f, 0.0f, 0.0f, 0.0f), m_isEnable(true)
+	Object() noexcept : m_isEnable(true)
 	{
 		m_transform = AddComponent<Transform>();
 	}
-	virtual ~Object() = default;
-
-	void	OnCreate() {
-		for (const auto& itr : m_components) {
-			itr->OnCreate();
-		}
-	}
-
-	void	OnUpdate(float fElapsedTime) {
-		for (const auto& itr : m_components) {
-			itr->OnUpdate(fElapsedTime);
-		}
-	}
-
-	void	OnLateUpdate(float fElapsedTime) {
-		for (const auto& itr : m_components) {
-			itr->OnLateUpdate(fElapsedTime);
-		}
-	}
-
-	void	OnRender(float fElapsedTime) {
-		for (const auto& itr : m_components) {
-			itr->OnRender(fElapsedTime);
+	~Object() {
+		for (auto& itr : m_components) {
+			itr.reset();
 		}
 	}
 
@@ -74,14 +54,38 @@ public:
 		return nullptr;
 	}
 
-	D3DXPLANE		GetPlane() {
-		return D3DXPLANE(
-			m_plane.a + m_transform->GetPosition().x,
-			m_plane.b + m_transform->GetPosition().y,
-			m_plane.c + m_transform->GetPosition().x,
-			m_plane.d + m_transform->GetPosition().y
-		);
+	void	OnCreate() {
+		for (const auto& itr : m_components) {
+			itr->OnCreate();
+		}
 	}
+
+	void	OnUpdate(float fElapsedTime) {
+		for (const auto& itr : m_components) {
+			itr->OnUpdate(fElapsedTime);
+		}
+	}
+
+	void	OnLateUpdate(float fElapsedTime) {
+		for (const auto& itr : m_components) {
+			itr->OnLateUpdate(fElapsedTime);
+		}
+	}
+
+	void	OnRender(float fElapsedTime) {
+		for (const auto& itr : m_components) {
+			itr->OnRender(fElapsedTime);
+		}
+	}
+
+	bool	IsQueuedForRemoval() {
+		return m_isQueuedForRemoval;
+	}
+
+	void	QueueForRemoval() {
+		m_isQueuedForRemoval = true;
+	}
+
 	void			SetEnable(bool enable) {
 		m_isEnable = enable;
 	}
@@ -89,11 +93,11 @@ public:
 		return m_isEnable;
 	}
 
-	std::shared_ptr<Transform>		m_transform;
+	std::shared_ptr<Transform>					m_transform;
 
 protected:
 	std::vector<std::shared_ptr<Component>>		m_components;
-	D3DXPLANE		m_plane;
 
 	bool			m_isEnable;
+	bool			m_isQueuedForRemoval;
 };

@@ -1,7 +1,7 @@
 #pragma once
 #include "DXUT.h"
 #include "header.hpp"
-#include "Texture.h"
+#include "Texture.hpp"
 
 template<typename T>
 class ResourceAllocator
@@ -38,7 +38,6 @@ public:
 	}
 
 	std::shared_ptr<T>		Get(int id) {
-				std::wcout << "test";
 		for (const auto& itr : m_resources) {
 			if (itr.second.first == id) {
 				return itr.second.second;

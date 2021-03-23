@@ -21,14 +21,20 @@
     <Filter Include="Game\Object">
       <UniqueIdentifier>{5ab444d8-119f-4687-8d49-dd90e5bbc17a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game\Object\Map">
-      <UniqueIdentifier>{bcd2a681-2bf2-4fe4-9e33-fe0c70fd10fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game\Object\Player">
-      <UniqueIdentifier>{df27b212-e4f5-4f2d-9370-1cceda50d8b3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Game\Component">
       <UniqueIdentifier>{8e8fcf9f-1581-4fcf-b86c-576204923c1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Component\PlayerComponent">
+      <UniqueIdentifier>{97986c92-9b5f-43e9-8fa6-e1615a6d20f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Component\EnemyComponent">
+      <UniqueIdentifier>{4e2c6989-edaf-4616-826c-6a894f25b755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Component\ItemComponent">
+      <UniqueIdentifier>{22aab18a-a9b8-47b3-9bb0-0f8803f95449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game\Component\StageComponent">
+      <UniqueIdentifier>{367d6653-d811-4138-a58c-f875e692def5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -107,12 +113,6 @@
     <ClCompile Include="MainScene.cpp">
       <Filter>Game\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Game\Object\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Game\Object\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Game</Filter>
     </ClCompile>
@@ -124,6 +124,18 @@
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>Game\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerComponent.cpp">
+      <Filter>Game\Component\PlayerComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyComponent.cpp">
+      <Filter>Game\Component\EnemyComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemComponent.cpp">
+      <Filter>Game\Component\ItemComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="StageComponent.cpp">
+      <Filter>Game\Component\StageComponent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -147,13 +159,7 @@
     <ClInclude Include="MainScene.hpp">
       <Filter>Game\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Map.hpp">
-      <Filter>Game\Object\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.hpp">
-      <Filter>Game\Object\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
+    <ClInclude Include="Texture.hpp">
       <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Object.hpp">
@@ -179,6 +185,21 @@
     </ClInclude>
     <ClInclude Include="ResourceAllocator.hpp">
       <Filter>Game\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerComponent.hpp">
+      <Filter>Game\Component\PlayerComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyComponent.hpp">
+      <Filter>Game\Component\EnemyComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawLine.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemComponent.hpp">
+      <Filter>Game\Component\ItemComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="StageComponent.hpp">
+      <Filter>Game\Component\StageComponent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

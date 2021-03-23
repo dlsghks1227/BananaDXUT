@@ -12,8 +12,10 @@
 #include "Transform.hpp"
 #include "Sprite.hpp"
 
-#include "Map.hpp"
-#include "Player.hpp"
+#include "PlayerComponent.hpp"
+#include "StageComponent.hpp"
+
+#include "DrawRect.hpp"
 
 class MainScene final : public IScene
 {
@@ -43,11 +45,6 @@ public:
 	LRESULT MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext) override;
 
 private:
-	ResourceAllocator<Texture>& m_textureAllocator;
-	ObjectCollection			m_objectCollection;
-	//std::shared_ptr<Player>		m_player;
-	//std::shared_ptr<Map>		m_map;
-
-	bool	m_isInside;
-	RECT	m_addRect;
+	ResourceAllocator<Texture>&			m_textureAllocator;
+	std::shared_ptr<ObjectCollection>	m_objectCollection;
 };

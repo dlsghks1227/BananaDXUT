@@ -15,6 +15,6 @@ public:
 
 	virtual void	OnRender(float fElapsedTime) {};
 
-private:
+protected:
 	Object*		m_object;
 };

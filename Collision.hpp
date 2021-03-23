@@ -3,7 +3,7 @@
 
 namespace Collision
 {
-	bool BoundingBoxCollision(D3DXPLANE const& rectA, D3DXPLANE const& rectB)
+	inline bool BoundingBoxCollision(D3DXPLANE const& rectA, D3DXPLANE const& rectB)
 	{
 		if (rectA.a < rectB.c && 
 			rectA.c > rectB.a && 
@@ -13,7 +13,7 @@ namespace Collision
 		return false;
 	}
 	
-	bool BoundingBoxPointCollision(D3DXPLANE const& rect, D3DXVECTOR3 const& point)
+	inline bool BoundingBoxPointCollision(D3DXPLANE const& rect, D3DXVECTOR3 const& point)
 	{
 		if (rect.a < point.x &&
 			rect.c > point.x &&
@@ -21,5 +21,10 @@ namespace Collision
 			rect.d > point.y)
 			return true;
 		return false;
+	}
+
+	inline bool LinePointCollision(D3DXPLANE const& rect, D3DXVECTOR3 const& point)
+	{
+
 	}
 }
