@@ -60,8 +60,7 @@ public:
 	void		OnRender(float fElapsedTime) override;
 
 	float		LinePointDistance(D3DXVECTOR3* out, D3DXPLANE const& plane, D3DXVECTOR2 const& point);
-
-
+	MapInfo		GetMapInfoInPosition(D3DXVECTOR3 const& pos);
 private:
 	void							Fill(int const& x, int const& y, MapInfo fill);
 	void							ChangeMapInfo(int const& x, int const& y, MapInfo const& info);

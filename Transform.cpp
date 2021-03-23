@@ -6,7 +6,7 @@ Transform::Transform(Object* owner) noexcept
 	m_rect{ 0, 0, 0, 0 },
 	m_position(0.0f, 0.0f, 0.0f),
 	m_offset(0.0f, 0.0f, 0.0f),
-	m_scale(0.0f, 0.0f),
+	m_scale(1.0f, 1.0f),
 	m_angle(0.0f)
 {
 }

@@ -17,6 +17,7 @@ void MainScene::OnEnterScene()
 {
 	m_objectCollection = std::make_shared<ObjectCollection>();
 
+	// ---------- Player ----------
 	std::shared_ptr<Object>		player = std::make_shared<Object>();
 
 	auto playerSprite = player->AddComponent<Sprite>();
@@ -24,21 +25,40 @@ void MainScene::OnEnterScene()
 	playerSprite->LoadTexture(L"Res/Player/default.png");
 
 	auto movenent = player->AddComponent<PlayerComponent>();
+
 	player->m_transform->SetScale(0.05f, 0.05f);
-	player->m_transform->SetCenter();
 	player->m_transform->SetPosition(300.0f, 0.0f, 0.0f);
+	player->m_transform->SetCenter();
 
+	// Debug
 	player->AddComponent<DrawRect>();
+	// ----------------------------
 
-
+	// ---------- Stage ----------
 	std::shared_ptr<Object>		stage = std::make_shared<Object>();
 	auto stageComponent = stage->AddComponent<StageComponent>();
 	stageComponent->Initialize(player.get(), m_objectCollection.get(), &m_textureAllocator, L"Res/Map.jpg");
 
+	// Debug
 	stage->AddComponent<DrawRect>();
+	// ---------------------------
+
+	// ---------- Enemy ----------
+	std::shared_ptr<Object>		enemy = std::make_shared<Object>();
+	auto enemyComponent = enemy->AddComponent<EnemyComponent>();
+	enemyComponent->Initialize(player.get(), stage.get());
+
+	enemy->m_transform->SetRect(0, 0, 100, 100);
+	enemy->m_transform->SetPosition(0.0f, 0.0f, 0.0f);
+	enemy->m_transform->SetCenter();
+
+	// Debug
+	enemy->AddComponent<DrawRect>();
+	// ---------------------------
 
 	m_objectCollection->Add(player);
 	m_objectCollection->Add(stage);
+	m_objectCollection->Add(enemy);
 }
 
 void MainScene::OnExitScene()
@@ -57,29 +77,6 @@ void MainScene::OnUpdate(float fElapsedTime)
 void MainScene::OnLateUpdate(float fElapsedTime)
 {
 	m_objectCollection->OnLateUpdate(fElapsedTime);
-
-	//bool isCollision = Collision::BoundingBoxPointCollision(m_map->GetPlane(), m_player->GetPosition());
-	//if (m_isInside != isCollision) {
-	//	m_isInside = isCollision;
-
-	//	if (m_isInside == true) {
-	//		// µé¾î°¬À» ¶§
-	//		m_addRect.left = static_cast<int>(std::round((m_map->GetMapSize().x * 0.5f) + m_player->GetPosition().x));
-	//		m_addRect.top = static_cast<int>(std::round((m_map->GetMapSize().y * 0.5f) + m_player->GetPosition().y));
-	//		std::cout << (m_map->GetMapSize().x * 0.5f) + m_player->GetPosition().x << '\n';
-	//		std::cout << (m_map->GetMapSize().y * 0.5f) + m_player->GetPosition().y << '\n';
-	//	}
-	//	else {
-	//		// ³ª°¬À» ¶§
-	//		m_addRect.right = static_cast<int>(std::round((m_map->GetMapSize().x * 0.5f) + m_player->GetPosition().x));
-	//		m_addRect.bottom = static_cast<int>(std::round((m_map->GetMapSize().y * 0.5f) + m_player->GetPosition().y));
-	//		std::cout << (m_map->GetMapSize().x * 0.5f) + m_player->GetPosition().x << '\n';
-	//		std::cout << (m_map->GetMapSize().y * 0.5f) + m_player->GetPosition().y << '\n';
-	//		m_map->AddMap(m_addRect);
-	//		m_addRect = { 0, 0, 0, 0 };
-	//	}
-	//}
-	//bool isCollision = Collision::BoundingBoxCollision(m_map->GetPlane(), m_player->GetPlane());
 }
 
 void MainScene::OnRender(float fElapsedTime)

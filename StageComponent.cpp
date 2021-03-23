@@ -68,7 +68,13 @@ void StageComponent::Initialize(
 
 	for (int x = 0; x < m_mapGridWidth; x++) {
 		for (int y = 0; y < m_mapGridHeight; y++) {
-			this->ChangeMapInfo(x, y, MapInfo::None);
+			if (x == 0 || y == 0 || x == m_mapGridWidth - 1 || y == m_mapGridHeight - 1) {
+				this->ChangeMapInfo(x, y, MapInfo::Paint);
+			}
+			else
+			{
+				this->ChangeMapInfo(x, y, MapInfo::None);
+			}
 		}
 	}
 
@@ -95,26 +101,26 @@ void StageComponent::Initialize(
 
 void StageComponent::OnUpdate(float fElapsedTime)
 {
-	float bestNear = 10000.0f;
-	D3DXVECTOR3 bestLine(0.0f, 0.0f, 0.0f);
-
-	for (const auto& itr : m_mapDirections) {
-		D3DXVECTOR3 line(0.0f, 0.0f, 0.0f);
-
-		float distance = this->LinePointDistance(&line, itr.second, D3DXVECTOR2(
-			m_player->m_transform->GetPosition().x,
-			m_player->m_transform->GetPosition().y)
-		);
-
-		if (bestNear >= distance) {
-			bestNear = distance;
-			bestLine = line;
-			m_currentNearLine.first = itr.first;
-			m_currentNearLine.second = itr.second;
-		}
-	}
-
 	if (m_player != nullptr) {
+		float bestNear = 10000.0f;
+		D3DXVECTOR3 bestLine(0.0f, 0.0f, 0.0f);
+
+		for (const auto& itr : m_mapDirections) {
+			D3DXVECTOR3 line(0.0f, 0.0f, 0.0f);
+
+			float distance = this->LinePointDistance(&line, itr.second, D3DXVECTOR2(
+				m_player->m_transform->GetPosition().x,
+				m_player->m_transform->GetPosition().y)
+			);
+
+			if (bestNear >= distance) {
+				bestNear = distance;
+				bestLine = line;
+				m_currentNearLine.first = itr.first;
+				m_currentNearLine.second = itr.second;
+			}
+		}
+
 		auto movement = m_player->GetComponent<PlayerComponent>();
 		bool isCollided = Collision::BoundingBoxPointCollision(m_object->m_transform->GetPlane(), m_player->m_transform->GetPosition());
 
@@ -221,6 +227,15 @@ float StageComponent::LinePointDistance(D3DXVECTOR3* out, D3DXPLANE const& plane
 	}
 
 	return std::sqrtf((dx * dx) + (dy * dy));
+}
+
+MapInfo StageComponent::GetMapInfoInPosition(D3DXVECTOR3 const& pos)
+{
+	POINT point = this->GetGridPosition(pos);
+	return this->GetMapData(
+		point.x,
+		point.y
+	)->m_info;
 }
 
 void StageComponent::Fill(int const& x, int const& y, MapInfo fill)

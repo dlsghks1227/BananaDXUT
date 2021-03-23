@@ -14,6 +14,7 @@
 
 #include "PlayerComponent.hpp"
 #include "StageComponent.hpp"
+#include "EnemyComponent.hpp"
 
 #include "DrawRect.hpp"
 

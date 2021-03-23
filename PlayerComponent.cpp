@@ -54,9 +54,9 @@ void PlayerComponent::OnUpdate(float fElapsedTime)
 		m_isRotated = true;
 	}
 
-	m_object->m_transform->AddPosition((m_velocity * m_speed * fElapsedTime));
 }
 
 void PlayerComponent::OnLateUpdate(float fElapsedTime)
 {
+	m_object->m_transform->AddPosition((m_velocity * m_speed * fElapsedTime));
 }

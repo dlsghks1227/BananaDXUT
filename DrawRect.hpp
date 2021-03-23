@@ -15,7 +15,7 @@ public:
 	}
 	~DrawRect() = default;
 
-	void	OnUpdate(float fElapsedTime) override {
+	void	OnLateUpdate(float fElapsedTime) override {
 		auto plane = m_object->m_transform->GetPlane();
 		m_vertexList[0] = D3DXVECTOR3(plane.a,	plane.b,	-1.0f);
 		m_vertexList[1] = D3DXVECTOR3(plane.c,	plane.b,	-1.0f);
