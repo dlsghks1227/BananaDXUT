@@ -48,7 +48,11 @@ void MainScene::OnEnterScene()
 	auto enemyComponent = enemy->AddComponent<EnemyComponent>();
 	enemyComponent->Initialize(player.get(), stage.get());
 
-	enemy->m_transform->SetRect(0, 0, 100, 100);
+	auto enemySprite = enemy->AddComponent<Sprite>();
+	enemySprite->SetTextureAllocator(&m_textureAllocator);
+	enemySprite->LoadTexture(L"Res/Player/default.png");
+
+	enemy->m_transform->SetScale(0.05f, 0.05f);
 	enemy->m_transform->SetPosition(0.0f, 0.0f, 0.0f);
 	enemy->m_transform->SetCenter();
 
@@ -56,9 +60,37 @@ void MainScene::OnEnterScene()
 	enemy->AddComponent<DrawRect>();
 	// ---------------------------
 
+	// ---------- Item ----------
+	std::shared_ptr<Object>		item = std::make_shared<Object>();
+	auto itemComponent = item->AddComponent<ItemComponent>();
+	itemComponent->Initialize(player.get(), ItemType::SpeedUp, 4.0f);
+
+	item->m_transform->SetRect(0, 0, 50, 50);
+	item->m_transform->SetPosition(0.0f, 0.0f, 100.0f);
+	item->m_transform->SetCenter();
+
+	// Debug
+	item->AddComponent<DrawRect>();
+	// ---------------------------
+
+		// ---------- Item ----------
+	std::shared_ptr<Object>		item2 = std::make_shared<Object>();
+	auto item2Component = item2->AddComponent<ItemComponent>();
+	item2Component->Initialize(player.get(), ItemType::SpeedDown, 3.0f);
+
+	item2->m_transform->SetRect(0, 0, 50, 50);
+	item2->m_transform->SetPosition(100.0f, 100.0f, 100.0f);
+	item2->m_transform->SetCenter();
+
+	// Debug
+	item2->AddComponent<DrawRect>();
+	// ---------------------------
+
 	m_objectCollection->Add(player);
 	m_objectCollection->Add(stage);
 	m_objectCollection->Add(enemy);
+	m_objectCollection->Add(item);
+	m_objectCollection->Add(item2);
 }
 
 void MainScene::OnExitScene()

@@ -232,6 +232,7 @@ float StageComponent::LinePointDistance(D3DXVECTOR3* out, D3DXPLANE const& plane
 MapInfo StageComponent::GetMapInfoInPosition(D3DXVECTOR3 const& pos)
 {
 	POINT point = this->GetGridPosition(pos);
+	
 	return this->GetMapData(
 		point.x,
 		point.y
@@ -300,8 +301,15 @@ D3DXVECTOR2 StageComponent::GetWorldPosition(POINT const& pos, bool center)
 
 POINT StageComponent::GetGridPosition(D3DXVECTOR3 const& pos)
 {
-	return POINT {
+	POINT point = POINT{
 		static_cast<int>(std::floor(pos.x) - std::floor(m_object->m_transform->GetPosition().x)) / c_gridOffset,
 		static_cast<int>(std::floor(pos.y) - std::floor(m_object->m_transform->GetPosition().y)) / c_gridOffset
 	};
+
+	if (point.x <= 0)	point.x = 0;
+	if (point.y <= 0)	point.y = 0;
+	if (point.x >= m_mapGridWidth)	point.x = m_mapGridWidth - 1;
+	if (point.y >= m_mapGridHeight)	point.y = m_mapGridHeight - 1;
+
+	return point;
 }

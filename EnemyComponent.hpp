@@ -2,12 +2,13 @@
 #include "DXUT.h"
 #include "header.hpp"
 
+#include "Collision.hpp"
+
 #include "Object.hpp"
 #include "Component.hpp"
 
 #include "StageComponent.hpp"
 
-#include "Collision.hpp"
 
 class EnemyComponent : public Component
 {
@@ -25,6 +26,7 @@ private:
 	Object*			m_stage;
 
 	D3DXVECTOR3		m_velocity;
+	float			m_speed;
 	float			m_angle;
 
 	bool			m_isCollided;

@@ -54,9 +54,58 @@ void PlayerComponent::OnUpdate(float fElapsedTime)
 		m_isRotated = true;
 	}
 
+	//if (m_activedItem == true) {
+	//	m_activeTime += fElapsedTime;
+
+	//	if (m_activeTime)
+	//}
 }
 
 void PlayerComponent::OnLateUpdate(float fElapsedTime)
 {
+	if (m_activeItems.empty() == false) {
+		auto itr = m_activeItems.begin();
+		while (itr != m_activeItems.end()) {
+			itr->second.m_activeTime += fElapsedTime;
+
+			switch (itr->first) {
+			case ItemType::SpeedUp:
+				m_speed = 200.0f;
+				if (itr->second.m_activeTime >= itr->second.m_activeDuration) {
+					m_speed = 100.0f;
+					itr->second.m_activedItem = true;
+				}
+				break;
+			case ItemType::SpeedDown:
+				m_speed = 50.0f;
+				if (itr->second.m_activeTime >= itr->second.m_activeDuration) {
+					m_speed = 100.0f;
+					itr->second.m_activedItem = true;
+				}
+				break;
+			}
+
+			if (itr->second.m_activedItem == true) {
+				itr = m_activeItems.erase(itr);
+			}
+			else {
+				++itr;
+			}
+		}
+	}
+
 	m_object->m_transform->AddPosition((m_velocity * m_speed * fElapsedTime));
+}
+
+void PlayerComponent::GetItem(ItemType const& type, float activeDuration)
+{
+	auto itr = m_activeItems.find(type);
+	if (itr != m_activeItems.end()) {
+		itr->second.m_activeTime = 0.0f;
+		itr->second.m_activeDuration = activeDuration;
+		itr->second.m_activedItem = false;
+	}
+	else {
+		m_activeItems.insert(std::make_pair(type, ActiveItem(activeDuration)));
+	}
 }

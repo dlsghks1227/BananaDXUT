@@ -48,14 +48,8 @@
     <Filter Include="6. AddComponent\Component">
       <UniqueIdentifier>{8e8fcf9f-1581-4fcf-b86c-576204923c1c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="6. AddComponent\Component\PlayerComponent">
-      <UniqueIdentifier>{97986c92-9b5f-43e9-8fa6-e1615a6d20f9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="6. AddComponent\Component\EnemyComponent">
       <UniqueIdentifier>{4e2c6989-edaf-4616-826c-6a894f25b755}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="6. AddComponent\Component\ItemComponent">
-      <UniqueIdentifier>{22aab18a-a9b8-47b3-9bb0-0f8803f95449}</UniqueIdentifier>
     </Filter>
     <Filter Include="6. AddComponent\Component\StageComponent">
       <UniqueIdentifier>{367d6653-d811-4138-a58c-f875e692def5}</UniqueIdentifier>
@@ -65,6 +59,12 @@
     </Filter>
     <Filter Include="Debug">
       <UniqueIdentifier>{18dc348f-a671-4f78-bbed-61037da77b72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="6. AddComponent\Component\+ ItemComponent">
+      <UniqueIdentifier>{22aab18a-a9b8-47b3-9bb0-0f8803f95449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="6. AddComponent\Component\+ PlayerComponent">
+      <UniqueIdentifier>{97986c92-9b5f-43e9-8fa6-e1615a6d20f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -135,13 +135,13 @@
       <Filter>5. AddScene\Scene</Filter>
     </ClCompile>
     <ClCompile Include="PlayerComponent.cpp">
-      <Filter>6. AddComponent\Component\PlayerComponent</Filter>
+      <Filter>6. AddComponent\Component\+ PlayerComponent</Filter>
     </ClCompile>
     <ClCompile Include="EnemyComponent.cpp">
       <Filter>6. AddComponent\Component\EnemyComponent</Filter>
     </ClCompile>
     <ClCompile Include="ItemComponent.cpp">
-      <Filter>6. AddComponent\Component\ItemComponent</Filter>
+      <Filter>6. AddComponent\Component\+ ItemComponent</Filter>
     </ClCompile>
     <ClCompile Include="StageComponent.cpp">
       <Filter>6. AddComponent\Component\StageComponent</Filter>
@@ -174,13 +174,13 @@
       <Filter>5. AddScene\Scene</Filter>
     </ClInclude>
     <ClInclude Include="PlayerComponent.hpp">
-      <Filter>6. AddComponent\Component\PlayerComponent</Filter>
+      <Filter>6. AddComponent\Component\+ PlayerComponent</Filter>
     </ClInclude>
     <ClInclude Include="EnemyComponent.hpp">
       <Filter>6. AddComponent\Component\EnemyComponent</Filter>
     </ClInclude>
     <ClInclude Include="ItemComponent.hpp">
-      <Filter>6. AddComponent\Component\ItemComponent</Filter>
+      <Filter>6. AddComponent\Component\+ ItemComponent</Filter>
     </ClInclude>
     <ClInclude Include="StageComponent.hpp">
       <Filter>6. AddComponent\Component\StageComponent</Filter>

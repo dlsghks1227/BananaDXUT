@@ -6,6 +6,7 @@ EnemyComponent::EnemyComponent(Object* owner) noexcept
 	m_player(nullptr),
 	m_stage(nullptr),
 	m_velocity(0.0f, 0.0f, 0.0f),
+	m_speed(100.0f),
 	m_angle(45.0f),
 	m_isCollided(false)
 {
@@ -32,6 +33,9 @@ void EnemyComponent::OnUpdate(float fElapsedTime)
 
 			if (m_isCollided == true) {
 				m_angle += 90.0f;
+				if (m_angle > 0.0f && m_angle < 180.0f) {
+
+				}
 			}
 		}
 	}
@@ -43,5 +47,5 @@ void EnemyComponent::OnUpdate(float fElapsedTime)
 
 void EnemyComponent::OnLateUpdate(float fElapsedTIme)
 {
-	m_object->m_transform->AddPosition(m_velocity * 50.0f * fElapsedTIme);
+	m_object->m_transform->AddPosition(m_velocity * m_speed * fElapsedTIme);
 }
