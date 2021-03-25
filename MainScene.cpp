@@ -17,6 +17,19 @@ void MainScene::OnEnterScene()
 {
 	m_objectCollection = std::make_shared<ObjectCollection>();
 
+	// ---------- Background ----------
+	std::shared_ptr<Object>		background = std::make_shared<Object>();
+
+	auto backgroundSprite = background->AddComponent<Sprite>();
+	backgroundSprite->SetTextureAllocator(&m_textureAllocator);
+	backgroundSprite->LoadTexture(L"Res/background.png");
+
+	background->m_transform->SetPosition(0.0f, 0.0f, 1.0f);
+	background->m_transform->SetCenter();
+
+	m_objectCollection->Add(background);
+	// --------------------------------
+
 	// ---------- Player ----------
 	std::shared_ptr<Object>		player = std::make_shared<Object>();
 
@@ -50,9 +63,9 @@ void MainScene::OnEnterScene()
 
 	auto enemySprite = enemy->AddComponent<Sprite>();
 	enemySprite->SetTextureAllocator(&m_textureAllocator);
-	enemySprite->LoadTexture(L"Res/Player/default.png");
+	enemySprite->LoadTexture(L"Res/enemy.png");
 
-	enemy->m_transform->SetScale(0.05f, 0.05f);
+	enemy->m_transform->SetScale(0.2f, 0.2f);
 	enemy->m_transform->SetPosition(0.0f, 0.0f, 0.0f);
 	enemy->m_transform->SetCenter();
 
