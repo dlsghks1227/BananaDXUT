@@ -16,7 +16,6 @@
 #include "Sprite.hpp"
 #include "Transform.hpp"
 #include "PlayerComponent.hpp"
-#include "DrawLine.hpp"
 
 enum class MapDirection : int {
 	Left = 0,
@@ -28,7 +27,9 @@ enum class MapDirection : int {
 enum class MapInfo {
 	None = 0,
 	Line,
-	Paint
+	Paint,
+	Compare1,
+	Compare2
 };
 
 struct MapData {
@@ -55,19 +56,22 @@ public:
 	);
 
 	void		OnUpdate(float fElapsedTime) override;
-	void		OnLateUpdate(float fElapsedTime) override;
 
 	void		OnRender(float fElapsedTime) override;
 
-	float		LinePointDistance(D3DXVECTOR3* out, D3DXPLANE const& plane, D3DXVECTOR2 const& point);
-	MapInfo		GetMapInfoInPosition(D3DXVECTOR3 const& pos);
-private:
-	void							Fill(int const& x, int const& y, MapInfo fill);
-	void							ChangeMapInfo(int const& x, int const& y, MapInfo const& info);
-	std::shared_ptr<MapData> const&	GetMapData(int const& x, int const& y);
-
-	D3DXVECTOR2						GetWorldPosition(POINT const& pos, bool center = false);
 	POINT							GetGridPosition(D3DXVECTOR3 const& pos);
+	D3DXVECTOR2						GetWorldPosition(POINT const& pos, bool center = false);
+	std::shared_ptr<MapData> const& GetMapData(int const& x, int const& y);
+
+
+	int			GetMapWidth()		{ return m_mapGridWidth; }
+	int			GetMapHeight()		{ return m_mapGridHeight; }
+
+private:
+	int								Fill(int const& x, int const& y, MapInfo fill);
+	void							ChangeMapInfo(int const& x, int const& y, MapInfo const& info);
+
+	void							UpdateMapLine();
 
 	Object*							m_player;
 	ObjectCollection*				m_objectCollection;
@@ -79,11 +83,7 @@ private:
 
 	MapDatas						m_mapDatas;
 
-	std::map<MapDirection, D3DXPLANE>	m_mapDirections;
-	std::pair<MapDirection, D3DXPLANE>	m_currentNearLine;
-
-	RECT		m_currentLinePosition;
-	DrawLine	m_currentDrawLine;
-
 	bool			m_inside;
+
+	// float		LinePointDistance(D3DXVECTOR3* out, D3DXPLANE const& plane, D3DXVECTOR2 const& point);
 };

@@ -8,6 +8,7 @@
 #include "Component.hpp"
 
 #include "StageComponent.hpp"
+#include "DrawLine.hpp"
 
 
 class EnemyComponent : public Component
@@ -21,6 +22,8 @@ public:
 	void			OnUpdate(float fElapsedTime)		override;
 	void			OnLateUpdate(float fElapsedTIme)	override;
 
+	void			OnRender(float fElapsedTIme)		override;
+
 private:
 	Object*			m_player;
 	Object*			m_stage;
@@ -30,5 +33,8 @@ private:
 	float			m_angle;
 
 	bool			m_isCollided;
+
+	DrawLine		m_DrawLine1;
+	DrawLine		m_DrawLine2;
 };
 

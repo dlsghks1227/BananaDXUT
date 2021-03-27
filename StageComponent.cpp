@@ -8,7 +8,6 @@ StageComponent::StageComponent(Object* owner) noexcept
 	m_textureAllocator(nullptr),
 	m_mapGridWidth(0),
 	m_mapGridHeight(0),
-	m_currentLinePosition{-100, -100, 10000, 10000},
 	m_inside(false)
 {
 }
@@ -46,33 +45,12 @@ void StageComponent::Initialize(
 	m_mapGridWidth = (m_object->m_transform->GetRect().right / c_gridOffset);
 	m_mapGridHeight = (m_object->m_transform->GetRect().bottom / c_gridOffset);
 
-	auto plane = m_object->m_transform->GetPlane();
-	m_mapDirections.insert(std::make_pair(
-		MapDirection::Left, D3DXPLANE(plane.a, plane.b, plane.a, plane.d)));
-
-	m_mapDirections.insert(std::make_pair(
-		MapDirection::Top, D3DXPLANE(plane.a, plane.b, plane.c, plane.b)));
-
-	m_mapDirections.insert(std::make_pair(
-		MapDirection::Right, D3DXPLANE(plane.c, plane.b, plane.c, plane.d)));
-
-	m_mapDirections.insert(std::make_pair(
-		MapDirection::Bottom, D3DXPLANE(plane.a, plane.d, plane.c, plane.d)));
-
-	const auto itr = m_mapDirections.find(MapDirection::Right);
-
-	if (itr != m_mapDirections.cend()) {
-		m_currentNearLine.first = itr->first;
-		m_currentNearLine.second = itr->second;
-	}
-
 	for (int x = 0; x < m_mapGridWidth; x++) {
 		for (int y = 0; y < m_mapGridHeight; y++) {
 			if (x == 0 || y == 0 || x == m_mapGridWidth - 1 || y == m_mapGridHeight - 1) {
 				this->ChangeMapInfo(x, y, MapInfo::Paint);
 			}
-			else
-			{
+			else {
 				this->ChangeMapInfo(x, y, MapInfo::None);
 			}
 		}
@@ -102,29 +80,37 @@ void StageComponent::Initialize(
 void StageComponent::OnUpdate(float fElapsedTime)
 {
 	if (m_player != nullptr) {
-		float bestNear = 10000.0f;
-		D3DXVECTOR3 bestLine(0.0f, 0.0f, 0.0f);
+		//float bestNear = 10000.0f;
+		//D3DXVECTOR3 bestLine(0.0f, 0.0f, 0.0f);
 
-		for (const auto& itr : m_mapDirections) {
-			D3DXVECTOR3 line(0.0f, 0.0f, 0.0f);
+		//for (const auto& itr : m_mapDirections) {
+		//	D3DXVECTOR3 line(0.0f, 0.0f, 0.0f);
 
-			float distance = this->LinePointDistance(&line, itr.second, D3DXVECTOR2(
-				m_player->m_transform->GetPosition().x,
-				m_player->m_transform->GetPosition().y)
-			);
+		//	float distance = this->LinePointDistance(&line, itr.second, D3DXVECTOR2(
+		//		m_player->m_transform->GetPosition().x,
+		//		m_player->m_transform->GetPosition().y)
+		//	);
 
-			if (bestNear >= distance) {
-				bestNear = distance;
-				bestLine = line;
-				m_currentNearLine.first = itr.first;
-				m_currentNearLine.second = itr.second;
-			}
-		}
+		//	if (bestNear >= distance) {
+		//		bestNear = distance;
+		//		bestLine = line;
+		//		m_currentNearLine.first = itr.first;
+		//		m_currentNearLine.second = itr.second;
+		//	}
+		//}
 
 		auto movement = m_player->GetComponent<PlayerComponent>();
-		bool isCollided = Collision::BoundingBoxPointCollision(m_object->m_transform->GetPlane(), m_player->m_transform->GetPosition());
-
+		//bool isCollided = Collision::BoundingBoxPointCollision(m_object->m_transform->GetPlane(), m_player->m_transform->GetPosition());
 		POINT playerPos = this->GetGridPosition(m_player->m_transform->GetPosition());
+
+		bool isCollided = false;
+
+		if (0 <= playerPos.x && 0 <= playerPos.y && playerPos.x < m_mapGridWidth && playerPos.y < m_mapGridHeight) {
+			isCollided = (this->GetMapData(playerPos.x, playerPos.y)->m_info == MapInfo::None || this->GetMapData(playerPos.x, playerPos.y)->m_info == MapInfo::Line);
+		}
+		else {
+			isCollided = false;
+		}
 
 		if (m_inside != isCollided) {
 			m_inside = isCollided;
@@ -137,40 +123,18 @@ void StageComponent::OnUpdate(float fElapsedTime)
 			}
 
 			if (m_inside == false) {
-
-				//this->Fill(resultFillPosX, resultFillPosY, MapInfo::Paint);
-				for (auto& itr : m_mapDatas) {
-					if (itr.second->m_info == MapInfo::Line) {
-						itr.second->m_info = MapInfo::Paint;
-					}
-				}
+				this->UpdateMapLine();
 			}
 		}
 
 		if (m_inside == true && playerPos.x < m_mapGridWidth && playerPos.y < m_mapGridHeight) {
 			this->ChangeMapInfo(playerPos.x, playerPos.y, MapInfo::Line);
-			D3DXVECTOR2 minPos = this->GetWorldPosition(POINT{ m_currentLinePosition.left, m_currentLinePosition.top });
-			D3DXVECTOR2 maxPos = this->GetWorldPosition(POINT{ m_currentLinePosition.right, m_currentLinePosition.bottom });
-
-			m_currentDrawLine.SetPosition(
-				D3DXVECTOR3(minPos.x, minPos.y, 0.0f),
-				D3DXVECTOR3(maxPos.x, maxPos.y, 0.0f)
-			);
-			
-			if (movement->IsRotated() == true) {
-			}
 		}
 	}
 }
 
-void StageComponent::OnLateUpdate(float fElapsedTime)
-{
-}
-
 void StageComponent::OnRender(float fElapsedTime)
 {
-	m_currentDrawLine.OnRender(fElapsedTime);
-
 	for (auto& itr : m_mapDatas) {
 		m_texture->SetRect(
 			RECT{ 
@@ -185,6 +149,7 @@ void StageComponent::OnRender(float fElapsedTime)
 		m_texture->SetPosition(D3DXVECTOR3(worldPos.x, worldPos.y, 1.0f));
 
 		switch (itr.second->m_info) {
+		case MapInfo::Line:
 		case MapInfo::Paint:
 			m_texture->Draw();
 			break;
@@ -192,56 +157,33 @@ void StageComponent::OnRender(float fElapsedTime)
 	}
 }
 
-float StageComponent::LinePointDistance(D3DXVECTOR3* out, D3DXPLANE const& plane, D3DXVECTOR2 const& point)
+POINT StageComponent::GetGridPosition(D3DXVECTOR3 const& pos)
 {
-	float dx = plane.c - plane.a;
-	float dy = plane.d - plane.b;
+	POINT point = POINT{
+		static_cast<int>(std::floor(pos.x) - std::floor(m_object->m_transform->GetPosition().x)) / c_gridOffset,
+		static_cast<int>(std::floor(pos.y) - std::floor(m_object->m_transform->GetPosition().y)) / c_gridOffset
+	};
 
-	if ((dx == 0.0f) && (dy == 0.0f)) {
-		(*out) = D3DXVECTOR3(plane.a, plane.b, 0.0f);
-
-		dx = point.x - plane.a;
-		dy = point.y - plane.b;
-		return std::sqrtf((dx * dx) + (dy * dy));
-	}
-
-	float t = (((point.x - plane.a) * dx) + ((point.y - plane.b) * dy)) / ((dx * dx) + (dy * dy));
-
-	if (t < 0.0f) {
-		(*out) = D3DXVECTOR3(plane.a, plane.b, 0.0f);
-
-		dx = point.x - plane.a;
-		dy = point.y - plane.b;
-	}
-	else if (t > 1.0f) {
-		(*out) = D3DXVECTOR3(plane.c, plane.d, 0.0f);
-
-		dx = point.x - plane.c;
-		dy = point.y - plane.d;
-	}
-	else {
-		(*out) = D3DXVECTOR3(plane.a + t * dx, plane.b + t * dy, 0.0f);
-
-		dx = point.x - (*out).x;
-		dy = point.y - (*out).y;
-	}
-
-	return std::sqrtf((dx * dx) + (dy * dy));
+	return point;
 }
 
-MapInfo StageComponent::GetMapInfoInPosition(D3DXVECTOR3 const& pos)
+D3DXVECTOR2 StageComponent::GetWorldPosition(POINT const& pos, bool center)
 {
-	POINT point = this->GetGridPosition(pos);
-	
-	return this->GetMapData(
-		point.x,
-		point.y
-	)->m_info;
+	return D3DXVECTOR2(
+		(static_cast<float>(pos.x * c_gridOffset) - (static_cast<float>(m_object->m_transform->GetRect().right) * 0.5f)),
+		(static_cast<float>(pos.y * c_gridOffset) - (static_cast<float>(m_object->m_transform->GetRect().bottom) * 0.5f))
+	);
 }
 
-void StageComponent::Fill(int const& x, int const& y, MapInfo fill)
+std::shared_ptr<MapData> const& StageComponent::GetMapData(int const& x, int const& y)
+{
+	return m_mapDatas[(x + (m_mapGridWidth * y))];
+}
+
+int StageComponent::Fill(int const& x, int const& y, MapInfo fill)
 {
 	std::stack<MapData>		toVisit;
+	int						area = 0;
 
 	toVisit.push(MapData(x, y, fill));
 
@@ -259,26 +201,32 @@ void StageComponent::Fill(int const& x, int const& y, MapInfo fill)
 			(this->GetMapData(data.m_posX - 1, data.m_posY)->m_info == MapInfo::None))
 		{
 			toVisit.push(MapData(data.m_posX - 1, data.m_posY, fill));
+			area++;
 		}
 
 		if (data.m_posX + 1 < m_mapGridWidth && 
 			(this->GetMapData(data.m_posX + 1, data.m_posY)->m_info == MapInfo::None))
 		{
 			toVisit.push(MapData(data.m_posX + 1, data.m_posY, fill));
+			area++;
 		}
 
 		if (data.m_posY - 1 >= 0 && 
 			(this->GetMapData(data.m_posX, data.m_posY - 1)->m_info == MapInfo::None))
 		{
 			toVisit.push(MapData(data.m_posX, data.m_posY - 1, fill));
+			area++;
 		}
 
 		if (data.m_posY + 1 < m_mapGridHeight && 
 			(this->GetMapData(data.m_posX, data.m_posY + 1)->m_info == MapInfo::None))
 		{
 			toVisit.push(MapData(data.m_posX, data.m_posY + 1, fill));
+			area++;
 		}
 	}
+
+	return area;
 }
 
 void StageComponent::ChangeMapInfo(int const& x, int const& y, MapInfo const& info)
@@ -286,30 +234,71 @@ void StageComponent::ChangeMapInfo(int const& x, int const& y, MapInfo const& in
 	m_mapDatas[(x + (m_mapGridWidth * y))] = std::make_shared<MapData>(x, y, info);
 }
 
-std::shared_ptr<MapData> const& StageComponent::GetMapData(int const& x, int const& y)
+void StageComponent::UpdateMapLine()
 {
-	return m_mapDatas[(x + (m_mapGridWidth * y))];
+	MapInfo fillData = MapInfo::Compare1;
+	MapInfo resultData = MapInfo::Compare1;
+	int		bestArea = 0;
+
+	for (int x = 0; x < m_mapGridWidth; x++) {
+		for (int y = 0; y < m_mapGridHeight; y++) {
+			if (this->GetMapData(x, y)->m_info == MapInfo::None) {
+				int area = this->Fill(x, y, fillData);
+				if (bestArea <= area) {
+					bestArea = area;
+					resultData = fillData;
+				}
+				fillData = MapInfo::Compare2;
+			}
+		}
+	}
+
+	std::wcout << static_cast<int>(resultData) << '\n';
+
+	//this->Fill(resultFillPosX, resultFillPosY, MapInfo::Paint);
+	for (auto& itr : m_mapDatas) {
+		if (itr.second->m_info == resultData) {
+			itr.second->m_info = MapInfo::None;
+		}
+		else if (itr.second->m_info != resultData || itr.second->m_info != MapInfo::None) {
+			itr.second->m_info = MapInfo::Paint;
+		}
+	}
 }
 
-D3DXVECTOR2 StageComponent::GetWorldPosition(POINT const& pos, bool center)
-{
-	return D3DXVECTOR2(
-		(static_cast<float>(pos.x * c_gridOffset) - (static_cast<float>(m_object->m_transform->GetRect().right) * 0.5f)),
-		(static_cast<float>(pos.y * c_gridOffset) - (static_cast<float>(m_object->m_transform->GetRect().bottom) * 0.5f))
-	);
-}
-
-POINT StageComponent::GetGridPosition(D3DXVECTOR3 const& pos)
-{
-	POINT point = POINT{
-		static_cast<int>(std::floor(pos.x) - std::floor(m_object->m_transform->GetPosition().x)) / c_gridOffset,
-		static_cast<int>(std::floor(pos.y) - std::floor(m_object->m_transform->GetPosition().y)) / c_gridOffset
-	};
-
-	if (point.x <= 0)	point.x = 0;
-	if (point.y <= 0)	point.y = 0;
-	if (point.x >= m_mapGridWidth)	point.x = m_mapGridWidth - 1;
-	if (point.y >= m_mapGridHeight)	point.y = m_mapGridHeight - 1;
-
-	return point;
-}
+//float StageComponent::LinePointDistance(D3DXVECTOR3* out, D3DXPLANE const& plane, D3DXVECTOR2 const& point)
+//{
+//	float dx = plane.c - plane.a;
+//	float dy = plane.d - plane.b;
+//
+//	if ((dx == 0.0f) && (dy == 0.0f)) {
+//		(*out) = D3DXVECTOR3(plane.a, plane.b, 0.0f);
+//
+//		dx = point.x - plane.a;
+//		dy = point.y - plane.b;
+//		return std::sqrtf((dx * dx) + (dy * dy));
+//	}
+//
+//	float t = (((point.x - plane.a) * dx) + ((point.y - plane.b) * dy)) / ((dx * dx) + (dy * dy));
+//
+//	if (t < 0.0f) {
+//		(*out) = D3DXVECTOR3(plane.a, plane.b, 0.0f);
+//
+//		dx = point.x - plane.a;
+//		dy = point.y - plane.b;
+//	}
+//	else if (t > 1.0f) {
+//		(*out) = D3DXVECTOR3(plane.c, plane.d, 0.0f);
+//
+//		dx = point.x - plane.c;
+//		dy = point.y - plane.d;
+//	}
+//	else {
+//		(*out) = D3DXVECTOR3(plane.a + t * dx, plane.b + t * dy, 0.0f);
+//
+//		dx = point.x - (*out).x;
+//		dy = point.y - (*out).y;
+//	}
+//
+//	return std::sqrtf((dx * dx) + (dy * dy));
+//}
