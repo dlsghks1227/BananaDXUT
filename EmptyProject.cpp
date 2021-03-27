@@ -120,7 +120,7 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
     HRESULT hr;
 
     // Clear the render target and the zbuffer 
-    V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 45, 50, 170 ), 1.0f, 0 ) );
+    V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 102, 102, 255 ), 1.0f, 0 ) );
     float windowWidth = static_cast<float>(DXUTGetWindowWidth());
     float windowHeight = static_cast<float>(DXUTGetWindowHeight());
 
@@ -250,7 +250,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int ){
     DXUTSetHotkeyHandling( true, true, true );  // handle the default hotkeys
     DXUTSetCursorSettings( true, true ); // Show the cursor and clip it when in full screen
     DXUTCreateWindow( L"EmptyProject" );
-    DXUTCreateDevice( true, 1280, 1024 );
+    DXUTCreateDevice( true, 1920, 1080 );
 
     // Start the render loop
     DXUTMainLoop();
