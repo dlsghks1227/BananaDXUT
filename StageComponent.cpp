@@ -6,8 +6,10 @@ StageComponent::StageComponent(Object* owner) noexcept
 	m_player(nullptr),
 	m_objectCollection(nullptr),
 	m_textureAllocator(nullptr),
+	m_startPosition(0.0f, 0.0f, 0.0f),
 	m_mapGridWidth(0),
 	m_mapGridHeight(0),
+	m_clearMapCount(1.0f),
 	m_inside(false)
 {
 }
@@ -25,6 +27,8 @@ void StageComponent::Initialize(
 	m_player = player;
 	m_objectCollection = objectCollection;
 	m_textureAllocator = textureAllocator;
+
+	m_startPosition = m_player->m_transform->GetPosition();
 
 	if (m_textureAllocator) {
 		int textureID = m_textureAllocator->Add(path);
@@ -60,7 +64,7 @@ void StageComponent::Initialize(
 void StageComponent::OnUpdate(float fElapsedTime)
 {
 	if (m_player != nullptr) {
-		auto movement = m_player->GetComponent<PlayerComponent>();
+		auto playerComponent = m_player->GetComponent<PlayerComponent>();
 		POINT playerPos = this->GetGridPosition(m_player->m_transform->GetPosition());
 
 		bool isCollided = false;
@@ -75,20 +79,22 @@ void StageComponent::OnUpdate(float fElapsedTime)
 		if (m_inside != isCollided) {
 			m_inside = isCollided;
 
-			if (m_inside == true) {
-
-				std::wcout << playerPos.x << ' ' << playerPos.y << '\n';
-
-				std::wcout << static_cast<int>(movement->GetDirection()) << '\n';
-			}
-
 			if (m_inside == false) {
 				this->UpdateMapLine();
 			}
 		}
 
 		if (m_inside == true && playerPos.x < m_mapGridWidth && playerPos.y < m_mapGridHeight) {
-			this->ChangeMapInfo(playerPos.x, playerPos.y, MapInfo::Line);
+			if (this->GetMapData(
+				playerPos.x + static_cast<int>(playerComponent->GetVelocity().x), 
+				playerPos.y + static_cast<int>(playerComponent->GetVelocity().y))->m_info == MapInfo::Line)
+			{
+				this->resetPlayer();
+			}
+			else
+			{
+				this->ChangeMapInfo(playerPos.x, playerPos.y, MapInfo::Line);
+			}
 		}
 	}
 }
@@ -141,6 +147,21 @@ MapData* StageComponent::GetMapData(int const& x, int const& y)
 		return m_mapDatas[(x + (m_mapGridWidth * y))].get();
 	}
 	return nullptr;
+}
+
+void StageComponent::resetPlayer()
+{
+	if (m_player != nullptr) {
+		auto playerComponent = m_player->GetComponent<PlayerComponent>();
+		playerComponent->Reset(m_startPosition);
+		playerComponent->DecreaseHp();
+
+		for (auto& itr : m_mapDatas) {
+			if (itr.second->m_info == MapInfo::Line) {
+				itr.second->m_info = MapInfo::None;
+			}
+		}
+	}
 }
 
 int StageComponent::Fill(int const& x, int const& y, MapInfo fill)
@@ -216,8 +237,6 @@ void StageComponent::UpdateMapLine()
 		}
 	}
 
-	std::wcout << static_cast<int>(resultData) << '\n';
-
 	//this->Fill(resultFillPosX, resultFillPosY, MapInfo::Paint);
 	for (auto& itr : m_mapDatas) {
 		if (itr.second->m_info == resultData) {
@@ -225,6 +244,14 @@ void StageComponent::UpdateMapLine()
 		}
 		else if (itr.second->m_info != resultData || itr.second->m_info != MapInfo::None) {
 			itr.second->m_info = MapInfo::Paint;
+		}
+	}
+
+	m_clearMapCount = 0.0f;
+
+	for (auto& itr : m_mapDatas) {
+		if (itr.second->m_info == MapInfo::Paint) {
+			m_clearMapCount += 1.0f;
 		}
 	}
 }

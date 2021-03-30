@@ -18,7 +18,6 @@ PlayerComponent::~PlayerComponent()
 void PlayerComponent::OnUpdate(float fElapsedTime)
 {
 	m_isRotated = false;
-	//m_direction = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	if (g_inputManager->GetKeyPressed(DIK_LEFT) == true &&
 		m_direction != PlayerDirection::Left &&
 		m_direction != PlayerDirection::Right) 
@@ -107,4 +106,21 @@ void PlayerComponent::GetItem(ItemType const& type, float activeDuration)
 	else {
 		m_activeItems.insert(std::make_pair(type, ActiveItem(activeDuration)));
 	}
+}
+
+void PlayerComponent::Reset(D3DXVECTOR3 const& pos)
+{
+	m_object->m_transform->SetPosition(pos);
+	m_velocity = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_direction = PlayerDirection::None;
+}
+
+void PlayerComponent::IncreaseHp(int const& amount)
+{
+	m_hp += amount;
+}
+
+void PlayerComponent::DecreaseHp(int const& amount)
+{
+	m_hp -= amount;
 }

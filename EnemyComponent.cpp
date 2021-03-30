@@ -11,10 +11,17 @@ EnemyComponent::EnemyComponent(Object* owner) noexcept
 	m_rightCollisionPosition(0.0f, 0.0f, 0.0f),
 	m_velocity(0.0f, 0.0f, 0.0f),
 	m_speed(150.0f),
-	m_angle(45.0f),
 	m_isLeftCollided(false),
 	m_isRightCollided(false)
 {
+	std::vector<float>	angles;
+	for (float i = 1.0f; i < 5.0f; i += 1.0f) {
+		angles.push_back(45.0f + (90.0f * i));
+	}
+
+	std::random_device rng;
+	std::shuffle(angles.begin(), angles.end(), rng);
+	m_angle = angles[0];
 }
 
 EnemyComponent::~EnemyComponent()
@@ -22,12 +29,14 @@ EnemyComponent::~EnemyComponent()
 }
 
 void EnemyComponent::Initialize(
+	float speed,
 	Object* player, 
 	Object* stage, 
 	ObjectCollection* objectCollection,
 	ResourceAllocator<Texture>* textureAllocator
 )
 {
+	m_speed				= speed;
 	m_player			= player;
 	m_stage				= stage;
 	m_objectCollection	= objectCollection;
@@ -81,10 +90,18 @@ void EnemyComponent::OnUpdate(float fElapsedTime)
 					widthDist(rng),
 					heightDist(rng)
 				};
-				std::wcout << itemPos.x << '\n';
-				std::wcout << itemPos.y << '\n';
 				CreateItem(stageComponent->GetWorldPosition(itemPos), ItemType::SpeedUp);
 				m_object->QueueForRemoval();
+			}
+
+
+
+			if (enemyMapData->m_info == MapInfo::Line || 
+				Collision::BoundingBoxPointCollision(
+					m_object->m_transform->GetPlane(),
+					m_player->m_transform->GetPosition()))
+			{
+				stageComponent->resetPlayer();
 			}
 		}
 		else if (enemyPoint.x < 0 || enemyPoint.y < 0 || enemyPoint.x > stageComponent->GetMapWidth() || enemyPoint.y > stageComponent->GetMapHeight())
@@ -111,8 +128,8 @@ D3DXVECTOR3 EnemyComponent::GetCollisionPosition(float const& angle)
 {
 	return m_object->m_transform->GetPosition() +
 		D3DXVECTOR3(
-			(m_object->m_transform->GetScale().x * static_cast<float>(m_object->m_transform->GetRect().right)  * 0.5f) * std::cos(D3DXToRadian(angle)),
-			(m_object->m_transform->GetScale().y * static_cast<float>(m_object->m_transform->GetRect().bottom) * 0.5f) * std::sin(D3DXToRadian(angle)),
+			(m_object->m_transform->GetScale().x * static_cast<float>(m_object->m_transform->GetRect().right)  * 0.25f) * std::cos(D3DXToRadian(angle)),
+			(m_object->m_transform->GetScale().y * static_cast<float>(m_object->m_transform->GetRect().bottom) * 0.25f) * std::sin(D3DXToRadian(angle)),
 			-1.0f
 		);
 }

@@ -40,6 +40,11 @@ public:
 	bool const&					IsRotated()		{ return m_isRotated; }
 	PlayerDirection const&		GetDirection()	{ return m_direction; }
 
+	D3DXVECTOR3	const&			GetVelocity()	{ return m_velocity; }
+	void						Reset(D3DXVECTOR3 const& pos);
+
+	void						IncreaseHp(int const& amount = 1);
+	void						DecreaseHp(int const& amount = 1);
 	int const&					GetHp()			{ return m_hp; }
 
 private:

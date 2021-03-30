@@ -17,6 +17,7 @@ public:
 	~EnemyComponent();
 
 	void			Initialize(
+		float speed,
 		Object* player,
 		Object* stage,
 		ObjectCollection* objectCollection,

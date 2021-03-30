@@ -16,21 +16,29 @@ MenuScene::MenuScene() noexcept
 	m_HUD.SetCallback(OnGUIEvent);
 	m_UI.SetCallback(OnGUIEvent);
 
-	m_HUD.SetFont(1, L"Comic Sans MS", 48, FW_NORMAL);
-	m_HUD.AddButton(static_cast<int>(UI_CONTROL_ID::IDC_GAMESTART_BUTTON), L"asdasd", 0, 0, 300, 50);
-	m_HUD.GetControl(static_cast<int>(UI_CONTROL_ID::IDC_GAMESTART_BUTTON))->GetElement(0)->dwTextFormat = DT_CENTER | DT_VCENTER | DT_WORDBREAK;
-	m_HUD.GetControl(static_cast<int>(UI_CONTROL_ID::IDC_GAMESTART_BUTTON))->GetElement(0)->iFont = 1;
-	m_HUD.Refresh();
+	m_HUD.SetFont(0, L"Comic Sans MS", 30, FW_NORMAL);
+	m_HUD.AddButton(static_cast<int>(UI_CONTROL_ID::IDC_GAMESTART_BUTTON), L"Game Start", 0, 0, 300, 50, VK_RETURN);
 
-	m_UI.SetFont(1, L"Comic Sans MS", 48, FW_NORMAL);
-	m_UI.AddStatic(static_cast<int>(UI_CONTROL_ID::IDC_HP_TEXT), L"Game", 300, 300, 620, 300);
+	m_HUD.SetFont(0, L"Comic Sans MS", 30, FW_NORMAL);
+	m_HUD.AddButton(static_cast<int>(UI_CONTROL_ID::IDC_EXIT_BUTTON), L"Exit", 0, 70, 300, 50);
+
+	m_UI.SetFont(1, L"±Ã¼­Ã¼", 48, FW_NORMAL);
+	m_UI.AddStatic(static_cast<int>(UI_CONTROL_ID::IDC_HP_TEXT), L"Hello World!", 0, 0, 600, 300);
 	m_UI.GetControl(static_cast<int>(UI_CONTROL_ID::IDC_HP_TEXT))->GetElement(0)->dwTextFormat = DT_CENTER | DT_VCENTER | DT_WORDBREAK;
 	m_UI.GetControl(static_cast<int>(UI_CONTROL_ID::IDC_HP_TEXT))->GetElement(0)->iFont = 1;
-	m_UI.Refresh();
+
+
 }
 
 void MenuScene::OnEnterScene()
 {
+	auto backBufferSurfaceDesc = DXUTGetD3D9BackBufferSurfaceDesc();
+
+	m_HUD.SetLocation((backBufferSurfaceDesc->Width / 2) - 150, (backBufferSurfaceDesc->Height / 2) + 200);
+	m_HUD.SetSize(300, 300);
+
+	m_UI.SetLocation((backBufferSurfaceDesc->Width / 2) - 300, (backBufferSurfaceDesc->Height / 2) - 300);
+	m_UI.SetSize(600, 600);
 }
 
 void MenuScene::OnExitScene()
@@ -57,13 +65,6 @@ void MenuScene::OnUIRender(float fElapsedTime)
 
 void MenuScene::OnResetDevice()
 {
-	auto backBufferSurfaceDesc = DXUTGetD3D9BackBufferSurfaceDesc();
-
-	m_HUD.SetLocation(backBufferSurfaceDesc->Width / 2, backBufferSurfaceDesc->Height / 2);
-	m_HUD.SetSize(170, 170);
-
-	m_UI.SetLocation(0, 0);
-	m_UI.SetSize(backBufferSurfaceDesc->Width, backBufferSurfaceDesc->Height);
 }
 
 void MenuScene::OnLostDevice()

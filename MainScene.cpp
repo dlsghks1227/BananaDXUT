@@ -10,6 +10,24 @@ MainScene::MainScene(ResourceAllocator<Texture>& textureAllocator) noexcept :
 	m_stage(nullptr),
 	m_textureAllocator(textureAllocator)
 {
+	m_HUD.Init(&g_dialogResourceManager);
+	m_UI.Init(&g_dialogResourceManager);
+
+	m_HUD.SetCallback(OnGUIEvent);
+	m_UI.SetCallback(OnGUIEvent);
+
+	m_HUD.SetFont(0, L"Comic Sans MS", 24, FW_NORMAL);
+	m_HUD.AddButton(static_cast<int>(UI_CONTROL_ID::IDC_MENU_BUTTON), L"Menu", 0, 0, 200, 30);
+
+	m_UI.SetFont(1, L"Comic Sans MS", 48, FW_NORMAL);
+	m_UI.SetFont(2, L"Comic Sans MS", 100, FW_NORMAL);
+	m_UI.AddStatic(static_cast<int>(UI_CONTROL_ID::IDC_HP_TEXT), L"", 20, 20, 620, 300);
+	m_UI.GetControl(static_cast<int>(UI_CONTROL_ID::IDC_HP_TEXT))->GetElement(0)->dwTextFormat = DT_LEFT | DT_TOP | DT_WORDBREAK;
+	m_UI.GetControl(static_cast<int>(UI_CONTROL_ID::IDC_HP_TEXT))->GetElement(0)->iFont = 1;
+
+	m_UI.AddStatic(static_cast<int>(UI_CONTROL_ID::IDC_CLEAR_TEXT), L"", 20, 100, 300, 300);
+	m_UI.GetControl(static_cast<int>(UI_CONTROL_ID::IDC_CLEAR_TEXT))->GetElement(0)->dwTextFormat = DT_CENTER | DT_VCENTER | DT_WORDBREAK;
+	m_UI.GetControl(static_cast<int>(UI_CONTROL_ID::IDC_CLEAR_TEXT))->GetElement(0)->iFont = 2;
 }
 
 MainScene::~MainScene()
@@ -19,18 +37,18 @@ MainScene::~MainScene()
 
 void MainScene::OnEnterScene()
 {
-	m_HUD.Init(&g_dialogResourceManager);
-	m_UI.Init(&g_dialogResourceManager);
+	auto backBufferSurfaceDesc = DXUTGetD3D9BackBufferSurfaceDesc();
 
-	m_HUD.SetCallback(OnGUIEvent);
-	m_UI.SetCallback(OnGUIEvent);
+	m_HUD.SetLocation(backBufferSurfaceDesc->Width - 220, 20);
+	m_HUD.SetSize(200, 300);
 
-	m_HUD.AddButton(static_cast<int>(UI_CONTROL_ID::IDC_TOGGLEFULLSCREEN), L"Toggle full screen", 35, 10, 125, 22);
+	m_UI.SetLocation(0, 0);
+	m_UI.SetSize(backBufferSurfaceDesc->Width, backBufferSurfaceDesc->Height);
 
-	m_UI.SetFont(1, L"Comic Sans MS", 48, FW_NORMAL);
-	m_UI.AddStatic(static_cast<int>(UI_CONTROL_ID::IDC_HP_TEXT), L"TEST", 300, 300, 620, 300);
-	m_UI.GetControl(static_cast<int>(UI_CONTROL_ID::IDC_HP_TEXT))->GetElement(0)->dwTextFormat = DT_LEFT | DT_TOP | DT_WORDBREAK;
-	m_UI.GetControl(static_cast<int>(UI_CONTROL_ID::IDC_HP_TEXT))->GetElement(0)->iFont = 1;
+	m_UI.GetControl(static_cast<int>(UI_CONTROL_ID::IDC_CLEAR_TEXT))->SetLocation(
+		backBufferSurfaceDesc->Width / 2 - 150, 
+		backBufferSurfaceDesc->Height / 2 - 150
+	);
 
 	m_objectCollection = std::make_shared<ObjectCollection>();
 
@@ -58,38 +76,72 @@ void MainScene::OnEnterScene()
 	auto playerComponent = player->AddComponent<PlayerComponent>();
 
 	player->m_transform->SetScale(0.1f, 0.1f);
-	player->m_transform->SetPosition(300.0f, 0.0f, 0.0f);
+	player->m_transform->SetPosition(600.0f, 0.0f, 0.0f);
 	player->m_transform->SetAngle(45.0f);
 	player->m_transform->SetCenter();
+
+	m_objectCollection->Add(player);
 	// ----------------------------
 
 	// ---------- Stage ----------
 	std::shared_ptr<Object>		stage = std::make_shared<Object>();
 	m_stage = stage.get();
 	auto stageComponent = stage->AddComponent<StageComponent>();
-	stageComponent->Initialize(player.get(), m_objectCollection.get(), &m_textureAllocator, L"Res/Map.jpg");
+	stageComponent->Initialize(player.get(), m_objectCollection.get(), &m_textureAllocator, L"Res/background2.jpg");
+
+	m_objectCollection->Add(stage);
 	// ---------------------------
 
 	// ---------- Enemy ----------
-	std::shared_ptr<Object>		enemy = std::make_shared<Object>();
-	auto enemyComponent = enemy->AddComponent<EnemyComponent>();
-	enemyComponent->Initialize(player.get(), stage.get(), m_objectCollection.get(), &m_textureAllocator);
+	for (int i = 0; i < 3; i++)
+	{
+		std::shared_ptr<Object>		enemy = std::make_shared<Object>();
+		auto enemyComponent = enemy->AddComponent<EnemyComponent>();
+		enemyComponent->Initialize(150.0f, player.get(), stage.get(), m_objectCollection.get(), &m_textureAllocator);
 
-	auto enemySprite = enemy->AddComponent<Sprite>();
-	enemySprite->SetTextureAllocator(&m_textureAllocator);
-	enemySprite->LoadTexture(L"Res/enemy.png");
+		auto enemySprite = enemy->AddComponent<Sprite>();
+		enemySprite->SetTextureAllocator(&m_textureAllocator);
+		enemySprite->LoadTexture(L"Res/enemy.png");
 
-	enemy->m_transform->SetScale(0.2f, 0.2f);
-	enemy->m_transform->SetPosition(100.0f, 200.0f, 0.0f);
-	enemy->m_transform->SetCenter();
 
-	// Debug
-	enemy->AddComponent<DrawRect>();
+		std::random_device rng;
+		std::uniform_int_distribution<int>	widthDist(20, stageComponent->GetMapWidth() - 20);
+		std::uniform_int_distribution<int>	heightDist(20, stageComponent->GetMapHeight() - 20);
+		POINT enemyPoint = {
+			widthDist(rng),
+			heightDist(rng)
+		};
+		D3DXVECTOR2	enemyPos = stageComponent->GetWorldPosition(enemyPoint);
+
+		enemy->m_transform->SetScale(0.2f, 0.2f);
+		enemy->m_transform->SetPosition(enemyPos.x, enemyPos.y, 0.0f);
+		enemy->m_transform->SetCenter();
+
+		// Debug
+		enemy->AddComponent<DrawRect>();
+		m_objectCollection->Add(enemy);
+	}
 	// ---------------------------
 
-	m_objectCollection->Add(player);
-	m_objectCollection->Add(stage);
-	m_objectCollection->Add(enemy);
+
+	// ---------- Boss ----------
+	std::shared_ptr<Object>		boss = std::make_shared<Object>();
+	auto bossComponent = boss->AddComponent<EnemyComponent>();
+	bossComponent->Initialize(100.0f, player.get(), stage.get(), m_objectCollection.get(), &m_textureAllocator);
+
+	auto bossSprite = boss->AddComponent<Sprite>();
+	bossSprite->SetTextureAllocator(&m_textureAllocator);
+	bossSprite->LoadTexture(L"Res/boss.png");
+
+	boss->m_transform->SetScale(0.6f, 0.6f);
+	boss->m_transform->SetPosition(0.0f, 0.0f, 0.0f);
+	boss->m_transform->SetCenter();
+
+	// Debug
+	boss->AddComponent<DrawRect>();
+	m_objectCollection->Add(boss);
+	// --------------------------
+
 }
 
 void MainScene::OnExitScene()
@@ -115,6 +167,15 @@ void MainScene::OnLateUpdate(float fElapsedTime)
 		playerHpString << L"HP: " << playerComponent->GetHp();
 		m_UI.GetStatic(static_cast<int>(UI_CONTROL_ID::IDC_HP_TEXT))->SetText(playerHpString.str().c_str());
 
+
+		auto stageComponent = m_stage->AddComponent<StageComponent>();
+
+		std::wstringstream claerMapString(L"");
+		claerMapString << std::fixed;
+		claerMapString.precision(1);
+		claerMapString << stageComponent->GetClearMap() * 100.0f << " %";
+		m_UI.GetStatic(static_cast<int>(UI_CONTROL_ID::IDC_CLEAR_TEXT))->SetText(claerMapString.str().c_str());
+
 	}
 	m_objectCollection->OnLateUpdate(fElapsedTime);
 }
@@ -132,13 +193,6 @@ void MainScene::OnUIRender(float fElapsedTime)
 
 void MainScene::OnResetDevice()
 {
-	auto backBufferSurfaceDesc = DXUTGetD3D9BackBufferSurfaceDesc();
-
-	m_HUD.SetLocation(backBufferSurfaceDesc->Width - 170, 0);
-	m_HUD.SetSize(170, 170);
-
-	m_UI.SetLocation(0, 0);
-	m_UI.SetSize(backBufferSurfaceDesc->Width, backBufferSurfaceDesc->Height);
 }
 
 void MainScene::OnLostDevice()

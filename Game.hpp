@@ -36,6 +36,7 @@ public:
 
 	LRESULT		MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext);
 
+	void		ChangeScene(std::wstring const& name);
 private:
 	ResourceAllocator<Texture>	m_textureAllocator;
 

@@ -40,7 +40,7 @@ struct MapData {
 };
 
 
-constexpr int	c_gridOffset = 10;
+constexpr int	c_gridOffset = 16;
 using MapDatas = std::unordered_map<unsigned int, std::shared_ptr<MapData>>;
 
 class StageComponent : public Component
@@ -63,9 +63,12 @@ public:
 	D3DXVECTOR2						GetWorldPosition(POINT const& pos);
 	MapData*						GetMapData(int const& x, int const& y);
 
+	void		resetPlayer();
 
 	int			GetMapWidth()		{ return m_mapGridWidth; }
 	int			GetMapHeight()		{ return m_mapGridHeight; }
+
+	float		GetClearMap()		{ return m_clearMapCount / static_cast<float>(m_mapDatas.size()); }
 
 private:
 	int								Fill(int const& x, int const& y, MapInfo fill);
@@ -78,9 +81,12 @@ private:
 	ResourceAllocator<Texture>*		m_textureAllocator;
 	std::shared_ptr<Texture>		m_texture;
 
+	D3DXVECTOR3						m_startPosition;
+
 	int								m_mapGridWidth;
 	int								m_mapGridHeight;
 
+	float							m_clearMapCount;
 	MapDatas						m_mapDatas;
 
 	bool			m_inside;

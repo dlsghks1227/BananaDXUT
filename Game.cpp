@@ -27,9 +27,6 @@ Game::~Game()
 void Game::OnCreateDevice()
 {
 	m_sceneStateMachine.SwitchTo(L"MenuScene");
-	m_sceneStateMachine.SwitchTo(L"MainScene");
-	m_sceneStateMachine.SwitchTo(L"MenuScene");
-
 }
 
 void Game::OnUpdate(float fElapsedTime)
@@ -73,4 +70,9 @@ LRESULT Game::MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* 
 {
 	m_sceneStateMachine.MsgProc(hWnd, uMsg, wParam, lParam, pbNoFurtherProcessing, pUserContext);
 	return 0;
+}
+
+void Game::ChangeScene(std::wstring const& name)
+{
+	m_sceneStateMachine.SwitchTo(name);
 }
