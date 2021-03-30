@@ -50,6 +50,7 @@ void Sprite::OnRender(float fElapsedTime)
 	m_texture->SetPosition(m_object->m_transform->GetPosition());
 	m_texture->SetOffset(m_object->m_transform->GetOffset());
 	m_texture->SetScale(m_object->m_transform->GetScale());
+	m_texture->SetAngle(m_object->m_transform->GetAngle());
 	if (m_isEnable == true) {
 		m_texture->Draw();
 	}

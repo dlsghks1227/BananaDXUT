@@ -1,5 +1,7 @@
 #pragma once
 #include "DXUT.h"
+#include "SDKmisc.h"
+#include "DXUTsettingsdlg.h"
 #include "header.hpp"
 
 #include "IScene.hpp"
@@ -18,6 +20,8 @@
 #include "ItemComponent.hpp"
 
 #include "DrawRect.hpp"
+#include "Event.hpp"
+
 
 class MainScene final : public IScene
 {
@@ -38,6 +42,7 @@ public:
 	void	OnLateUpdate(float fElapsedTime)	override;
 
 	void	OnRender(float fElapsedTime)		override;
+	void	OnUIRender(float fElapsedTime)		override;
 
 	void	OnResetDevice()						override;
 	void	OnLostDevice()						override;
@@ -47,6 +52,12 @@ public:
 	LRESULT MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext) override;
 
 private:
+	CDXUTDialog							m_HUD;
+	CDXUTDialog							m_UI;
+
+	Object*								m_player;
+	Object*								m_stage;
+
 	ResourceAllocator<Texture>&			m_textureAllocator;
 	std::shared_ptr<ObjectCollection>	m_objectCollection;
 };

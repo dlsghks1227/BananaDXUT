@@ -32,6 +32,14 @@ void SceneStateMachine::OnRender(float fElapsedTime)
 	}
 }
 
+void SceneStateMachine::OnUIRender(float fElapsedTime)
+{
+	if (m_currentScene)
+	{
+		m_currentScene->OnUIRender(fElapsedTime);
+	}
+}
+
 void SceneStateMachine::OnResetDevice()
 {
 	if (m_currentScene)

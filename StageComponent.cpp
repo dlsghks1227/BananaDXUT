@@ -55,52 +55,12 @@ void StageComponent::Initialize(
 			}
 		}
 	}
-
-	//D3DXVECTOR3 vertex[] = {
-	//	{0.0f, 0.0f, 0.0f},
-	//	{100.0f, 0.0f, 0.0f},
-	//	{0.0f, 50.0f, 0.0f},
-	//	{50.0f, 50.0f, 0.0f},
-	//	{30.0f, 70.0f, 0.0f},
-	//	{50.0f, 70.0f, 0.0f},
-	//	{30.0f, 100.0f, 0.0f},
-	//	{100.0f, 100.0f, 0.0f},
-	//};
-
-	//std::vector<D3DXVECTOR3> vertex;
-
-	//std::sort(vertex.begin(), vertex.end(), [](D3DXVECTOR3 const& a, D3DXVECTOR3 const& b) -> bool {
-	//	bool swap = false;
-	//	if (a.y < b.y) swap = true;
-	//	if (a.y == b.y && a.x < b.x) swap = true;
-	//	return swap;
-	//	});
 }
 
 void StageComponent::OnUpdate(float fElapsedTime)
 {
 	if (m_player != nullptr) {
-		//float bestNear = 10000.0f;
-		//D3DXVECTOR3 bestLine(0.0f, 0.0f, 0.0f);
-
-		//for (const auto& itr : m_mapDirections) {
-		//	D3DXVECTOR3 line(0.0f, 0.0f, 0.0f);
-
-		//	float distance = this->LinePointDistance(&line, itr.second, D3DXVECTOR2(
-		//		m_player->m_transform->GetPosition().x,
-		//		m_player->m_transform->GetPosition().y)
-		//	);
-
-		//	if (bestNear >= distance) {
-		//		bestNear = distance;
-		//		bestLine = line;
-		//		m_currentNearLine.first = itr.first;
-		//		m_currentNearLine.second = itr.second;
-		//	}
-		//}
-
 		auto movement = m_player->GetComponent<PlayerComponent>();
-		//bool isCollided = Collision::BoundingBoxPointCollision(m_object->m_transform->GetPlane(), m_player->m_transform->GetPosition());
 		POINT playerPos = this->GetGridPosition(m_player->m_transform->GetPosition());
 
 		bool isCollided = false;
@@ -167,7 +127,7 @@ POINT StageComponent::GetGridPosition(D3DXVECTOR3 const& pos)
 	return point;
 }
 
-D3DXVECTOR2 StageComponent::GetWorldPosition(POINT const& pos, bool center)
+D3DXVECTOR2 StageComponent::GetWorldPosition(POINT const& pos)
 {
 	return D3DXVECTOR2(
 		(static_cast<float>(pos.x * c_gridOffset) - (static_cast<float>(m_object->m_transform->GetRect().right) * 0.5f)),
@@ -175,9 +135,12 @@ D3DXVECTOR2 StageComponent::GetWorldPosition(POINT const& pos, bool center)
 	);
 }
 
-std::shared_ptr<MapData> const& StageComponent::GetMapData(int const& x, int const& y)
+MapData* StageComponent::GetMapData(int const& x, int const& y)
 {
-	return m_mapDatas[(x + (m_mapGridWidth * y))];
+	if (m_mapDatas.count((x + (m_mapGridWidth * y))) > 0) {
+		return m_mapDatas[(x + (m_mapGridWidth * y))].get();
+	}
+	return nullptr;
 }
 
 int StageComponent::Fill(int const& x, int const& y, MapInfo fill)

@@ -5,8 +5,9 @@ PlayerComponent::PlayerComponent(Object* owner) noexcept
 	: Component(owner), 
 	m_velocity(0.0f, 0.0f, 0.0f),
 	m_direction(PlayerDirection::None),
-	m_speed(100.0f), 
-	m_isRotated(false)
+	m_speed(150.0f), 
+	m_isRotated(false),
+	m_hp(3)
 {
 }
 
@@ -22,6 +23,7 @@ void PlayerComponent::OnUpdate(float fElapsedTime)
 		m_direction != PlayerDirection::Left &&
 		m_direction != PlayerDirection::Right) 
 	{
+		m_object->m_transform->SetAngle(135.0f);
 		m_velocity = D3DXVECTOR3(-1.0f, 0.0f, 0.0f);
 		m_direction = PlayerDirection::Left;
 		m_isRotated = true;
@@ -31,6 +33,7 @@ void PlayerComponent::OnUpdate(float fElapsedTime)
 		m_direction != PlayerDirection::Right &&
 		m_direction != PlayerDirection::Left) 
 	{
+		m_object->m_transform->SetAngle(-45.0f);
 		m_velocity = D3DXVECTOR3(1.0f, 0.0f, 0.0f);
 		m_direction = PlayerDirection::Right;
 		m_isRotated = true;
@@ -40,6 +43,7 @@ void PlayerComponent::OnUpdate(float fElapsedTime)
 		m_direction != PlayerDirection::Up &&
 		m_direction != PlayerDirection::Down) 
 	{
+		m_object->m_transform->SetAngle(-135.0f);
 		m_velocity = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
 		m_direction = PlayerDirection::Up;
 		m_isRotated = true;
@@ -49,16 +53,11 @@ void PlayerComponent::OnUpdate(float fElapsedTime)
 		m_direction != PlayerDirection::Down &&
 		m_direction != PlayerDirection::Up) 
 	{
+		m_object->m_transform->SetAngle(45.0f);
 		m_velocity = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 		m_direction = PlayerDirection::Down;
 		m_isRotated = true;
 	}
-
-	//if (m_activedItem == true) {
-	//	m_activeTime += fElapsedTime;
-
-	//	if (m_activeTime)
-	//}
 }
 
 void PlayerComponent::OnLateUpdate(float fElapsedTime)
@@ -70,13 +69,13 @@ void PlayerComponent::OnLateUpdate(float fElapsedTime)
 
 			switch (itr->first) {
 			case ItemType::SpeedUp:
-				m_speed = 200.0f;
+				m_speed = 250.0f;
 				if (itr->second.m_activeTime >= itr->second.m_activeDuration) {
-					m_speed = 100.0f;
+					m_speed = 150.0f;
 					itr->second.m_activedItem = true;
 				}
 				break;
-			case ItemType::SpeedDown:
+			case ItemType::HpUp:
 				m_speed = 50.0f;
 				if (itr->second.m_activeTime >= itr->second.m_activeDuration) {
 					m_speed = 100.0f;

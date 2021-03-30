@@ -17,6 +17,9 @@
 #include <set>
 #include <stack>
 
+#include <random>
+#include <sstream>
+
 #include <queue>
 #include <unordered_map>
 

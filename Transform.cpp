@@ -83,6 +83,16 @@ const D3DXVECTOR2& Transform::GetScale() const
 	return m_scale;
 }
 
+void Transform::SetAngle(float const& angle)
+{
+	m_angle = angle;
+}
+
+const float& Transform::GetAngle() const
+{
+	return m_angle;
+}
+
 void Transform::SetCenter()
 {
 	m_offset = D3DXVECTOR3(

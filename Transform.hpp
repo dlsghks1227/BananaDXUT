@@ -32,6 +32,10 @@ public:
 
 	const D3DXVECTOR2&	GetScale() const;
 
+	void				SetAngle(float const& angle);
+
+	const float&		GetAngle() const;
+
 	void				SetCenter();
 
 	const D3DXPLANE		GetPlane() {

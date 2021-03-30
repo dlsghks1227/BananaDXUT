@@ -11,11 +11,6 @@ extern CDXUTDialogResourceManager	g_dialogResourceManager;
 
 Game::Game() noexcept
 {
-	m_HUD.Init(&g_dialogResourceManager);
-
-	m_HUD.SetCallback(OnGUIEvent);
-	m_HUD.AddButton(static_cast<int>(UI_CONTROL_ID::IDC_TOGGLEFULLSCREEN), L"Toggle full screen", 35, 10, 125, 22);
-
 	m_menuScene = std::make_shared<MenuScene>();
 	m_mainScene = std::make_shared<MainScene>(m_textureAllocator);
 
@@ -31,7 +26,10 @@ Game::~Game()
 
 void Game::OnCreateDevice()
 {
+	m_sceneStateMachine.SwitchTo(L"MenuScene");
 	m_sceneStateMachine.SwitchTo(L"MainScene");
+	m_sceneStateMachine.SwitchTo(L"MenuScene");
+
 }
 
 void Game::OnUpdate(float fElapsedTime)
@@ -46,17 +44,17 @@ void Game::OnLateUpdate(float fElapsedTime)
 
 void Game::OnRender(float fElapsedTime)
 {
-	m_HUD.OnRender(fElapsedTime);
-
 	m_sceneStateMachine.OnRender(fElapsedTime);
+}
+
+void Game::OnUIRender(float fElapsedTime)
+{
+	m_sceneStateMachine.OnUIRender(fElapsedTime);
 }
 
 void Game::OnResetDevice()
 {
-	auto backBufferSurfaceDesc = DXUTGetD3D9BackBufferSurfaceDesc();
-
-	m_HUD.SetLocation(backBufferSurfaceDesc->Width - 170, 0);
-	m_HUD.SetSize(170, 170);
+	m_sceneStateMachine.OnResetDevice();
 }
 
 void Game::OnLostDevice()
@@ -73,9 +71,6 @@ void Game::OnDestoryDevice()
 
 LRESULT Game::MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext)
 {
-	*pbNoFurtherProcessing = m_HUD.MsgProc(hWnd, uMsg, wParam, lParam);
-	if (*pbNoFurtherProcessing)
-		return 0;
-
+	m_sceneStateMachine.MsgProc(hWnd, uMsg, wParam, lParam, pbNoFurtherProcessing, pUserContext);
 	return 0;
 }

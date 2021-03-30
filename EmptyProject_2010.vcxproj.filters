@@ -60,10 +60,10 @@
     <Filter Include="Debug">
       <UniqueIdentifier>{18dc348f-a671-4f78-bbed-61037da77b72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="6. AddComponent\Component\+ ItemComponent">
+    <Filter Include="6. AddComponent\Component\ItemComponent">
       <UniqueIdentifier>{22aab18a-a9b8-47b3-9bb0-0f8803f95449}</UniqueIdentifier>
     </Filter>
-    <Filter Include="6. AddComponent\Component\+ PlayerComponent">
+    <Filter Include="6. AddComponent\Component\PlayerComponent">
       <UniqueIdentifier>{97986c92-9b5f-43e9-8fa6-e1615a6d20f9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -135,13 +135,13 @@
       <Filter>5. AddScene\Scene</Filter>
     </ClCompile>
     <ClCompile Include="PlayerComponent.cpp">
-      <Filter>6. AddComponent\Component\+ PlayerComponent</Filter>
+      <Filter>6. AddComponent\Component\PlayerComponent</Filter>
     </ClCompile>
     <ClCompile Include="EnemyComponent.cpp">
       <Filter>6. AddComponent\Component\EnemyComponent</Filter>
     </ClCompile>
     <ClCompile Include="ItemComponent.cpp">
-      <Filter>6. AddComponent\Component\+ ItemComponent</Filter>
+      <Filter>6. AddComponent\Component\ItemComponent</Filter>
     </ClCompile>
     <ClCompile Include="StageComponent.cpp">
       <Filter>6. AddComponent\Component\StageComponent</Filter>
@@ -174,13 +174,13 @@
       <Filter>5. AddScene\Scene</Filter>
     </ClInclude>
     <ClInclude Include="PlayerComponent.hpp">
-      <Filter>6. AddComponent\Component\+ PlayerComponent</Filter>
+      <Filter>6. AddComponent\Component\PlayerComponent</Filter>
     </ClInclude>
     <ClInclude Include="EnemyComponent.hpp">
       <Filter>6. AddComponent\Component\EnemyComponent</Filter>
     </ClInclude>
     <ClInclude Include="ItemComponent.hpp">
-      <Filter>6. AddComponent\Component\+ ItemComponent</Filter>
+      <Filter>6. AddComponent\Component\ItemComponent</Filter>
     </ClInclude>
     <ClInclude Include="StageComponent.hpp">
       <Filter>6. AddComponent\Component\StageComponent</Filter>

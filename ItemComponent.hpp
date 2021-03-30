@@ -8,11 +8,13 @@
 #include "Component.hpp"
 
 #include "PlayerComponent.hpp"
+#include "Sprite.hpp"
+
 
 enum class ItemType : int {
 	None = 0,
 	SpeedUp,
-	SpeedDown
+	HpUp,
 };
 
 class ItemComponent : public Component
@@ -21,7 +23,7 @@ public:
 	ItemComponent(Object* owner) noexcept;
 	~ItemComponent();
 
-	void		Initialize(Object* player, ItemType const& type, float activeDuration);
+	void		Initialize(Object* player, ItemType const& type, float activeDuration, ResourceAllocator<Texture>* textureAllocator);
 
 	void		OnUpdate(float fElapsedTime)		override;
 	void		OnLateUpdate(float fElapsedTIme)	override;

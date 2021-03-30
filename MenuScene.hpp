@@ -21,6 +21,7 @@ public:
 	void	OnLateUpdate(float fElapsedTime)	override;
 
 	void	OnRender(float fElapsedTime)		override;
+	void	OnUIRender(float fElapsedTime)		override;
 
 	void	OnResetDevice()						override;
 	void	OnLostDevice()						override;
@@ -30,5 +31,7 @@ public:
 	LRESULT MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext) override;
 
 private:
-	//CDXUTDialog		m_UI;
+	CDXUTDialog							m_HUD;
+	CDXUTDialog							m_UI;
+
 };

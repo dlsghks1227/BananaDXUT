@@ -49,19 +49,19 @@ public:
 	StageComponent(Object* owner) noexcept;
 	~StageComponent();
 
-	void		Initialize(Object* player, 
+	void		Initialize(
+		Object* player, 
 		ObjectCollection* objectCollection, 
 		ResourceAllocator<Texture>* textureAllocator,
-		std::wstring const& path
-	);
+		std::wstring const& path);
 
 	void		OnUpdate(float fElapsedTime) override;
 
 	void		OnRender(float fElapsedTime) override;
 
 	POINT							GetGridPosition(D3DXVECTOR3 const& pos);
-	D3DXVECTOR2						GetWorldPosition(POINT const& pos, bool center = false);
-	std::shared_ptr<MapData> const& GetMapData(int const& x, int const& y);
+	D3DXVECTOR2						GetWorldPosition(POINT const& pos);
+	MapData*						GetMapData(int const& x, int const& y);
 
 
 	int			GetMapWidth()		{ return m_mapGridWidth; }

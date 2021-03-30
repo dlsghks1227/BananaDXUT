@@ -27,6 +27,7 @@ public:
 	void		OnLateUpdate(float fElapsedTime);
 
 	void		OnRender(float fElapsedTime);
+	void		OnUIRender(float fElapsedTime);
 
 	void		OnResetDevice();
 	void		OnLostDevice();
@@ -36,8 +37,6 @@ public:
 	LRESULT		MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext);
 
 private:
-	CDXUTDialog					m_HUD;
-
 	ResourceAllocator<Texture>	m_textureAllocator;
 
 	SceneStateMachine			m_sceneStateMachine;

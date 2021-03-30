@@ -13,12 +13,20 @@ ItemComponent::~ItemComponent()
 {
 }
 
-void ItemComponent::Initialize(Object* player, ItemType const& type, float activeDuration)
+void ItemComponent::Initialize(Object* player, ItemType const& type, float activeDuration, ResourceAllocator<Texture>* textureAllocator)
 {
 	m_player = player;
 
 	m_type = type;
 	m_activeDuration = activeDuration;
+
+	switch (m_type) {
+	case ItemType::SpeedUp:
+		auto sprite = m_object->AddComponent<Sprite>();
+		sprite->SetTextureAllocator(textureAllocator);
+		sprite->LoadTexture(L"Res/item_SpeedUp.png");
+		break;
+	}
 }
 
 void ItemComponent::OnUpdate(float fElapsedTime)

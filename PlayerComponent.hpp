@@ -40,12 +40,16 @@ public:
 	bool const&					IsRotated()		{ return m_isRotated; }
 	PlayerDirection const&		GetDirection()	{ return m_direction; }
 
+	int const&					GetHp()			{ return m_hp; }
+
 private:
 	D3DXVECTOR3			m_velocity;
 	PlayerDirection		m_direction;
 
 	float				m_speed;
 	bool				m_isRotated;
+
+	int					m_hp;
 
 	std::map<ItemType, ActiveItem>		m_activeItems;
 

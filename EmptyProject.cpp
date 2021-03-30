@@ -150,6 +150,8 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
 
         g_sprite->End();
 
+        g_game->OnUIRender(fElapsedTime);
+
         V( pd3dDevice->EndScene() );
     }
 }
@@ -218,6 +220,8 @@ void CALLBACK OnGUIEvent(UINT nEvent, int nControlID, CDXUTControl* pControl, vo
     switch (static_cast<UI_CONTROL_ID>(nControlID)) {
     case UI_CONTROL_ID::IDC_TOGGLEFULLSCREEN:
         DXUTToggleFullScreen();
+        break;
+    case UI_CONTROL_ID::IDC_GAMESTART_BUTTON:
         break;
     }
 }

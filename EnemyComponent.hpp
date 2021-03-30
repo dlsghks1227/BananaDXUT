@@ -8,8 +8,7 @@
 #include "Component.hpp"
 
 #include "StageComponent.hpp"
-#include "DrawLine.hpp"
-
+#include "ItemComponent.hpp"
 
 class EnemyComponent : public Component
 {
@@ -17,7 +16,12 @@ public:
 	EnemyComponent(Object* owner) noexcept;
 	~EnemyComponent();
 
-	void			Initialize(Object* player, Object* stage);
+	void			Initialize(
+		Object* player,
+		Object* stage,
+		ObjectCollection* objectCollection,
+		ResourceAllocator<Texture>* textureAllocator
+	);
 
 	void			OnUpdate(float fElapsedTime)		override;
 	void			OnLateUpdate(float fElapsedTIme)	override;
@@ -25,16 +29,22 @@ public:
 	void			OnRender(float fElapsedTIme)		override;
 
 private:
-	Object*			m_player;
-	Object*			m_stage;
+	D3DXVECTOR3		GetCollisionPosition(float const& angle);
+	void			CreateItem(D3DXVECTOR2 const& pos, ItemType const& type);
 
-	D3DXVECTOR3		m_velocity;
-	float			m_speed;
-	float			m_angle;
+	Object*						m_player;
+	Object*						m_stage;
+	ObjectCollection*			m_objectCollection;
+	ResourceAllocator<Texture>* m_textureAllocator;
 
-	bool			m_isCollided;
 
-	DrawLine		m_DrawLine1;
-	DrawLine		m_DrawLine2;
+	D3DXVECTOR3			m_leftCollisionPosition;
+	D3DXVECTOR3			m_rightCollisionPosition;
+	D3DXVECTOR3			m_velocity;
+	float				m_speed;
+	float				m_angle;
+
+	bool				m_isLeftCollided;
+	bool				m_isRightCollided;
 };
 
