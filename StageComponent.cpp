@@ -79,10 +79,6 @@ void StageComponent::OnUpdate(float fElapsedTime)
 		if (m_inside != isCollided) {
 			m_inside = isCollided;
 
-			if (m_inside == true) {
-				this->UpdateMapLine();
-			}
-
 			if (m_inside == false) {
 				this->UpdateMapLine();
 			}
