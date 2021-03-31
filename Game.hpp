@@ -6,8 +6,12 @@
 #include "header.hpp"
 
 #include "SceneStateMachine.hpp"
+
 #include "MenuScene.hpp"
-#include "MainScene.hpp"
+#include "Stage1Scene.hpp"
+#include "Stage2Scene.hpp"
+#include "GameOverScene.hpp"
+#include "GameClearScene.hpp"
 
 class Game final
 {
@@ -40,7 +44,10 @@ public:
 private:
 	ResourceAllocator<Texture>	m_textureAllocator;
 
-	SceneStateMachine			m_sceneStateMachine;
-	std::shared_ptr<MenuScene>	m_menuScene;
-	std::shared_ptr<MainScene>	m_mainScene;
+	SceneStateMachine				m_sceneStateMachine;
+	std::shared_ptr<MenuScene>		m_menuScene;
+	std::shared_ptr<Stage1Scene>	m_stage1Scene;
+	std::shared_ptr<Stage2Scene>	m_stage2Scene;
+	std::shared_ptr<GameOverScene>	m_gameOverScene;
+	std::shared_ptr<GameClearScene>	m_gameClearScene;
 };

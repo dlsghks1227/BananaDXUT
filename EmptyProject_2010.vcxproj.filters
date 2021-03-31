@@ -131,9 +131,6 @@
     <ClCompile Include="MenuScene.cpp">
       <Filter>5. AddScene\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="MainScene.cpp">
-      <Filter>5. AddScene\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerComponent.cpp">
       <Filter>6. AddComponent\Component\PlayerComponent</Filter>
     </ClCompile>
@@ -165,12 +162,21 @@
     <ClCompile Include="Transform.cpp">
       <Filter>3. Component &amp; Resource\Component</Filter>
     </ClCompile>
+    <ClCompile Include="GameClearScene.cpp">
+      <Filter>5. AddScene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOverScene.cpp">
+      <Filter>5. AddScene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage1Scene.cpp">
+      <Filter>5. AddScene\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Stage2Scene.cpp">
+      <Filter>5. AddScene\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MenuScene.hpp">
-      <Filter>5. AddScene\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="MainScene.hpp">
       <Filter>5. AddScene\Scene</Filter>
     </ClInclude>
     <ClInclude Include="PlayerComponent.hpp">
@@ -228,6 +234,18 @@
     </ClInclude>
     <ClInclude Include="DrawLine.hpp">
       <Filter>Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="GameClearScene.hpp">
+      <Filter>5. AddScene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOverScene.hpp">
+      <Filter>5. AddScene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage1Scene.hpp">
+      <Filter>5. AddScene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Stage2Scene.hpp">
+      <Filter>5. AddScene\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

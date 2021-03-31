@@ -7,7 +7,7 @@ PlayerComponent::PlayerComponent(Object* owner) noexcept
 	m_direction(PlayerDirection::None),
 	m_speed(150.0f), 
 	m_isRotated(false),
-	m_hp(3)
+	m_hp(5)
 {
 }
 
@@ -57,6 +57,11 @@ void PlayerComponent::OnUpdate(float fElapsedTime)
 		m_direction = PlayerDirection::Down;
 		m_isRotated = true;
 	}
+
+	if (g_inputManager->GetKeyPressed(DIK_F3) == true)
+	{
+		this->IncreaseHp();
+	}
 }
 
 void PlayerComponent::OnLateUpdate(float fElapsedTime)
@@ -75,11 +80,8 @@ void PlayerComponent::OnLateUpdate(float fElapsedTime)
 				}
 				break;
 			case ItemType::HpUp:
-				m_speed = 50.0f;
-				if (itr->second.m_activeTime >= itr->second.m_activeDuration) {
-					m_speed = 100.0f;
-					itr->second.m_activedItem = true;
-				}
+				this->IncreaseHp();
+				itr->second.m_activedItem = true;
 				break;
 			}
 

@@ -30,10 +30,7 @@ D3DXMATRIXA16               g_matrix;
 LPD3DXSPRITE                g_sprite;
 LPD3DXLINE                  g_pLine;
 
-namespace
-{
-    std::unique_ptr<Game>       g_game;
-}
+std::unique_ptr<Game>       g_game;
 
 //--------------------------------------------------------------------------------------
 // Rejects any D3D9 devices that aren't acceptable to the app by returning false
@@ -219,7 +216,7 @@ void CALLBACK OnGUIEvent(UINT nEvent, int nControlID, CDXUTControl* pControl, vo
 {
     switch (static_cast<UI_CONTROL_ID>(nControlID)) {
     case UI_CONTROL_ID::IDC_GAMESTART_BUTTON:
-        g_game->ChangeScene(L"MainScene");
+        g_game->ChangeScene(L"Stage1Scene");
         break;
     case UI_CONTROL_ID::IDC_MENU_BUTTON:
         g_game->ChangeScene(L"MenuScene");

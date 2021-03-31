@@ -20,11 +20,15 @@ void ItemComponent::Initialize(Object* player, ItemType const& type, float activ
 	m_type = type;
 	m_activeDuration = activeDuration;
 
+	auto sprite = m_object->AddComponent<Sprite>();
 	switch (m_type) {
 	case ItemType::SpeedUp:
-		auto sprite = m_object->AddComponent<Sprite>();
 		sprite->SetTextureAllocator(textureAllocator);
 		sprite->LoadTexture(L"Res/item_SpeedUp.png");
+		break;
+	case ItemType::HpUp:
+		sprite->SetTextureAllocator(textureAllocator);
+		sprite->LoadTexture(L"Res/item_HpUp.png");
 		break;
 	}
 }

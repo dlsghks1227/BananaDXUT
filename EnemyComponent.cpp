@@ -90,7 +90,14 @@ void EnemyComponent::OnUpdate(float fElapsedTime)
 					widthDist(rng),
 					heightDist(rng)
 				};
-				CreateItem(stageComponent->GetWorldPosition(itemPos), ItemType::SpeedUp);
+
+				std::vector<ItemType>	type;
+				type.push_back(ItemType::SpeedUp);
+				type.push_back(ItemType::HpUp);
+
+				std::shuffle(type.begin(), type.end(), rng);
+
+				CreateItem(stageComponent->GetWorldPosition(itemPos), type[0]);
 				m_object->QueueForRemoval();
 			}
 

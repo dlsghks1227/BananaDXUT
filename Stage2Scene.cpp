@@ -1,14 +1,18 @@
 #include "DXUT.h"
-#include "MainScene.hpp"
+#include "Stage2Scene.hpp"
 
 #include "Collision.hpp"
 
 extern CDXUTDialogResourceManager	g_dialogResourceManager;
 
-MainScene::MainScene(ResourceAllocator<Texture>& textureAllocator) noexcept :
+Stage2Scene::Stage2Scene(
+	ResourceAllocator<Texture>& textureAllocator,
+	SceneStateMachine& sceneStateMachine
+) noexcept :
 	m_player(nullptr),
 	m_stage(nullptr),
-	m_textureAllocator(textureAllocator)
+	m_textureAllocator(textureAllocator),
+	m_sceneStateMachine(sceneStateMachine)
 {
 	m_HUD.Init(&g_dialogResourceManager);
 	m_UI.Init(&g_dialogResourceManager);
@@ -30,12 +34,12 @@ MainScene::MainScene(ResourceAllocator<Texture>& textureAllocator) noexcept :
 	m_UI.GetControl(static_cast<int>(UI_CONTROL_ID::IDC_CLEAR_TEXT))->GetElement(0)->iFont = 2;
 }
 
-MainScene::~MainScene()
+Stage2Scene::~Stage2Scene()
 {
 	m_objectCollection.reset();
 }
 
-void MainScene::OnEnterScene()
+void Stage2Scene::OnEnterScene()
 {
 	auto backBufferSurfaceDesc = DXUTGetD3D9BackBufferSurfaceDesc();
 
@@ -46,7 +50,7 @@ void MainScene::OnEnterScene()
 	m_UI.SetSize(backBufferSurfaceDesc->Width, backBufferSurfaceDesc->Height);
 
 	m_UI.GetControl(static_cast<int>(UI_CONTROL_ID::IDC_CLEAR_TEXT))->SetLocation(
-		backBufferSurfaceDesc->Width / 2 - 150, 
+		backBufferSurfaceDesc->Width / 2 - 150,
 		backBufferSurfaceDesc->Height / 2 - 150
 	);
 
@@ -117,8 +121,6 @@ void MainScene::OnEnterScene()
 		enemy->m_transform->SetPosition(enemyPos.x, enemyPos.y, 0.0f);
 		enemy->m_transform->SetCenter();
 
-		// Debug
-		enemy->AddComponent<DrawRect>();
 		m_objectCollection->Add(enemy);
 	}
 	// ---------------------------
@@ -137,19 +139,17 @@ void MainScene::OnEnterScene()
 	boss->m_transform->SetPosition(0.0f, 0.0f, 0.0f);
 	boss->m_transform->SetCenter();
 
-	// Debug
-	boss->AddComponent<DrawRect>();
 	m_objectCollection->Add(boss);
 	// --------------------------
 
 }
 
-void MainScene::OnExitScene()
+void Stage2Scene::OnExitScene()
 {
 	m_objectCollection.reset();
 }
 
-void MainScene::OnUpdate(float fElapsedTime)
+void Stage2Scene::OnUpdate(float fElapsedTime)
 {
 	m_objectCollection->ProcessRemovals();
 	m_objectCollection->ProcessNewObjects();
@@ -157,14 +157,16 @@ void MainScene::OnUpdate(float fElapsedTime)
 	m_objectCollection->OnUpdate(fElapsedTime);
 }
 
-void MainScene::OnLateUpdate(float fElapsedTime)
+void Stage2Scene::OnLateUpdate(float fElapsedTime)
 {
+	m_objectCollection->OnLateUpdate(fElapsedTime);
+
 	if (m_player != nullptr && m_stage != nullptr)
 	{
 		auto playerComponent = m_player->AddComponent<PlayerComponent>();
 
 		std::wstringstream playerHpString(L"");
-		playerHpString << L"HP: " << playerComponent->GetHp();
+		playerHpString << L"Stage 2\n" << L"HP: " << playerComponent->GetHp();
 		m_UI.GetStatic(static_cast<int>(UI_CONTROL_ID::IDC_HP_TEXT))->SetText(playerHpString.str().c_str());
 
 
@@ -176,35 +178,41 @@ void MainScene::OnLateUpdate(float fElapsedTime)
 		claerMapString << stageComponent->GetClearMap() * 100.0f << " %";
 		m_UI.GetStatic(static_cast<int>(UI_CONTROL_ID::IDC_CLEAR_TEXT))->SetText(claerMapString.str().c_str());
 
+		if (playerComponent->GetHp() <= 0) {
+			m_sceneStateMachine.SwitchTo(L"GameOverScene");
+		}
+
+		if (stageComponent->GetClearMap() > 0.8f) {
+			m_sceneStateMachine.SwitchTo(L"GameClearScene");
+		}
 	}
-	m_objectCollection->OnLateUpdate(fElapsedTime);
 }
 
-void MainScene::OnRender(float fElapsedTime)
+void Stage2Scene::OnRender(float fElapsedTime)
 {
 	m_objectCollection->OnRender(fElapsedTime);
 }
 
-void MainScene::OnUIRender(float fElapsedTime)
+void Stage2Scene::OnUIRender(float fElapsedTime)
 {
 	m_HUD.OnRender(fElapsedTime);
 	m_UI.OnRender(fElapsedTime);
 }
 
-void MainScene::OnResetDevice()
+void Stage2Scene::OnResetDevice()
 {
 }
 
-void MainScene::OnLostDevice()
+void Stage2Scene::OnLostDevice()
 {
 }
 
-void MainScene::OnDestroyDevice()
+void Stage2Scene::OnDestroyDevice()
 {
 	m_objectCollection.reset();
 }
 
-LRESULT MainScene::MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext)
+LRESULT Stage2Scene::MsgProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext)
 {
 	*pbNoFurtherProcessing = m_HUD.MsgProc(hWnd, uMsg, wParam, lParam);
 	if (*pbNoFurtherProcessing)

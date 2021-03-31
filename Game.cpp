@@ -11,17 +11,26 @@ extern CDXUTDialogResourceManager	g_dialogResourceManager;
 
 Game::Game() noexcept
 {
-	m_menuScene = std::make_shared<MenuScene>();
-	m_mainScene = std::make_shared<MainScene>(m_textureAllocator);
+	m_menuScene			= std::make_shared<MenuScene>();
+	m_stage1Scene		= std::make_shared<Stage1Scene>(m_textureAllocator, m_sceneStateMachine);
+	m_stage2Scene		= std::make_shared<Stage2Scene>(m_textureAllocator, m_sceneStateMachine);
+	m_gameOverScene		= std::make_shared<GameOverScene>();
+	m_gameClearScene	= std::make_shared<GameClearScene>();
 
-	m_sceneStateMachine.Add(L"MenuScene", m_menuScene);
-	m_sceneStateMachine.Add(L"MainScene", m_mainScene);
+	m_sceneStateMachine.Add(L"MenuScene",		m_menuScene);
+	m_sceneStateMachine.Add(L"Stage1Scene",		m_stage1Scene);
+	m_sceneStateMachine.Add(L"Stage2Scene",		m_stage2Scene);
+	m_sceneStateMachine.Add(L"GameOverScene",	m_gameOverScene);
+	m_sceneStateMachine.Add(L"GameClearScene",	m_gameClearScene);
 }
 
 Game::~Game()
 {
 	m_menuScene.reset();
-	m_mainScene.reset();
+	m_stage1Scene.reset();
+	m_stage2Scene.reset();
+	m_gameOverScene.reset();
+	m_gameClearScene.reset();
 }
 
 void Game::OnCreateDevice()
@@ -32,6 +41,22 @@ void Game::OnCreateDevice()
 void Game::OnUpdate(float fElapsedTime)
 {
 	m_sceneStateMachine.OnUpdate(fElapsedTime);
+
+	if (g_inputManager->GetKeyPressed(DIK_F4) == true)
+	{
+		m_sceneStateMachine.SwitchTo(L"MenuScene");
+
+	}
+	if (g_inputManager->GetKeyPressed(DIK_F5) == true)
+	{
+		m_sceneStateMachine.SwitchTo(L"Stage1Scene");
+
+	}
+	if (g_inputManager->GetKeyPressed(DIK_F6) == true)
+	{
+		m_sceneStateMachine.SwitchTo(L"Stage2Scene");
+
+	}
 }
 
 void Game::OnLateUpdate(float fElapsedTime)
