@@ -91,7 +91,7 @@ void Stage2Scene::OnEnterScene()
 	std::shared_ptr<Object>		stage = std::make_shared<Object>();
 	m_stage = stage.get();
 	auto stageComponent = stage->AddComponent<StageComponent>();
-	stageComponent->Initialize(player.get(), m_objectCollection.get(), &m_textureAllocator, L"Res/background2.jpg");
+	stageComponent->Initialize(player.get(), m_objectCollection.get(), &m_textureAllocator, L"Res/stage2.jpg");
 
 	m_objectCollection->Add(stage);
 	// ---------------------------
